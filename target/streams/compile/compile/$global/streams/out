@@ -1,0 +1,4 @@
+[0m[[0m[31merror[0m] [0m[0m/root/spark/distributed-hierarchical-clustering/src/main/scala/entropy.scala:30:50: too many arguments for method eigenValues: (A: Array[org.apache.spark.mllib.linalg.Vector])Array[Double][0m
+[0m[[0m[31merror[0m] [0m[0m            val eigen = Decomposition.eigenValues(L,sc)[0m
+[0m[[0m[31merror[0m] [0m[0m                                                 ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m
