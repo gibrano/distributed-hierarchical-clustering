@@ -28,27 +28,6 @@ object Graph {
        return B
     }
 
-    def sumAllEntries(A: Array[Array[Int]]): Double = {
-       var sum1 = 0.00
-       for( i <- A){
-          for(j <- i){
-              sum1 = sum1 + j
-          }
-       }
-       return sum1
-    }
-
-    def degrees(A: Array[Array[Int]]): Array[Int] = {
-        var n = A.size
-        var out = Array.fill(n)(0)
-        for( i <- A){
-           for(j <- 0 to (i.size-1)){
-               out(j) = out(j) + i(j)
-           }
-        }
-       return out
-    }
-
     def aggregate(A: org.apache.spark.rdd.RDD[Array[Int]], B: org.apache.spark.rdd.RDD[Array[Int]]): org.apache.spark.rdd.RDD[Array[Int]] = {
         var out = Array[Array[Int]]()
         var A2 = A.collect
