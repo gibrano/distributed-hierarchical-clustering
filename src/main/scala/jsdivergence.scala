@@ -3,26 +3,27 @@ package dhclust
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
-import org.apache.spark.mllib.linalg.Vector
-import org.apache.spark.mllib.linalg.Vectors
 
 object Divergence {
 
-  def JensenShannon(A: Array[org.apache.spark.mllib.linalg.Vector], B: Array[org.apache.spark.mllib.linalg.Vector], sc: SparkContext): Double = {
-     var n = A.size - 1
-     var C = Array[org.apache.spark.mllib.linalg.Vector]()
+  def JensenShannon(A: org.apache.spark.rdd.RDD[Array[Int]], B: org.apache.spark.rdd.RDD[Array[Int]], sc: SparkContext): Double = {
+     var A2 = A.collect
+     var B2 = B.collect
+     var n = A2.size - 1
+     var C = Array[Array[Double]]()
      for(i <- 0 to n){
-        var x = Vectors.zeros(n+1)
+        var x = Array.fill(n+1)(0.00)
         for(j <- 0 to n){
-           x.toArray(j) = 0.5*(A(i).toArray(j) - B(i).toArray(j))
+           x(j) = 0.5*(A2(i)(j) - B2(i)(j))
         }
         C = C ++ Array(x)
      }
-     var r = Entropy.VonNewmann(C, sc)-(1/2)*(Entropy.VonNewmann(A, sc)+Entropy.VonNewmann(B, sc))
+     var C2 = sc.parallelize(C)
+     var r = Entropy.VonNewmann(C2, sc)-(1/2)*(Entropy.VonNewmann(A, sc)+Entropy.VonNewmann(B, sc))
      return r
   }
 
-  def computeJSD(x: Array[Int], layers: Array[Array[org.apache.spark.mllib.linalg.Vector]], sc: SparkContext) : Double = {
+  def computeJSD(x: Array[Int], layers: Array[org.apache.spark.rdd.RDD[Array[Int]]], sc: SparkContext) : Double = {
     var jsd = JensenShannon(layers(x(0)),layers(x(1)), sc)
     return jsd
   }
