@@ -16,8 +16,11 @@ object Clusters {
     val hA = Entropy.VonNewmann(A, sc)
     var clusters = sc.parallelize(0 to n).map(i => Array(i)).collect
     var aux = clusters
-
+    
+    var t2 = System.nanoTime
     var globalquality = Entropy.GlobalQuality(layers, hA, sc)
+    var duration2 = (System.nanoTime - t1) / 1e9d
+    print("Duration time global q:",duration2)
     println(globalquality)
     var max = globalquality
     var q = Array[Double](globalquality)
@@ -32,14 +35,19 @@ object Clusters {
           }
        }
        coords = coords.filter(_.size > 0)
-
+       t2 = System.nanoTime
        var jsdMatrix = coords.map(x => Divergence.computeJSD(x, layers, sc))
+       duration2 = (System.nanoTime - t1) / 1e9d
+       print("Duration time div JS:",duration2)
        var minimum = jsdMatrix.zipWithIndex.min
        var a = coords(minimum._2)(0)
        var b = coords(minimum._2)(1)
        var Cx = layers(a)
        var Cy = layers(b)
+       t2 = System.nanoTime
        var newlayer = Graph.aggregate(Cx,Cy)
+       duration2 = (System.nanoTime - t1) / 1e9d
+       print("Duration time graph agg:",duration2)
        layers = layers.filter(_ != Cx)
        layers = layers.filter(_ != Cy)
        layers = layers ++ Array(newlayer)
@@ -49,7 +57,7 @@ object Clusters {
        aux = aux.filter(_ != v1)
        aux = aux.filter(_ != v2)
        aux = aux.union(Array(v1.union(v2)))
-
+  
        globalquality = Entropy.GlobalQuality(layers, hA, sc)
        println(globalquality)
 
