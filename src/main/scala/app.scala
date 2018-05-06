@@ -25,7 +25,7 @@ object App {
     println(tdm.mkString(" "))
     println("Creating layers ...")
     var layers = tdm.map(doc => Graph.adjacencyMatrix(doc))
-    println(layers.mkString(" "))
+    println("Layers dim",layers.size, layers(0).size)
     println("Starting clustering ...")
     val clusters = Clusters.Hierarchical(layers, sc)
     println(clusters.mkString(" "))
