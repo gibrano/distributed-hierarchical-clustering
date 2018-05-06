@@ -54,7 +54,9 @@ object Decomposition {
     val n = D.size - 1
     var eigenvalues = Array[Double]()
     for(i <- 0 to n){
-      eigenvalues = eigenvalues ++ Array(D(i)(i))
+      if D(i)(i) > 0 {
+        eigenvalues = eigenvalues ++ Array(D(i)(i))
+      }
     }
     return eigenvalues
   }
