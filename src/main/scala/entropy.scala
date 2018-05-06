@@ -3,27 +3,27 @@ package dhclust
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
-import org.apache.spark.mllib.linalg.Vector
-import org.apache.spark.mllib.linalg.Vectors
-import org.apache.spark.mllib.linalg.distributed.RowMatrix
-import org.apache.spark.mllib.linalg.{Matrix, Matrices}
 
 object Entropy {
 
-    def VonNewmann(A: Array[org.apache.spark.mllib.linalg.Vector], sc: SparkContext): Double = {
+    def VonNewmann(A: org.apache.spark.rdd.RDD[Array[Int]], sc: SparkContext): Double = {
         var entropy = 0.00
         var out = 0.00
-        val E = Graph.sumAllEntries(A)
+        val E = A.map(i => i.sum).reduce((x,y) => x+y) // sum of edges
         if (E != 0){
-            val c = 1/E
-            val degr = Graph.degrees(A)
-            val D = Matrices.diag(degr)
-            val n = D.numRows - 1
-            var L = Array[org.apache.spark.mllib.linalg.Vector]()
+            val c = 1/E 
+            val degr = A.map(r => r.sum).collect // degrees of nodes
+            var A2 = A.collect
+            val n = A2.size - 1
+            var L = Array[Array[Double]]()
             for(i <- 0 to n){
-                var x = Vectors.zeros(n+1)
+                var x = Array.fill(n+1)(0)
                 for(j <- 0 to n){
-                   x.toArray(j) = c*(D(i,j) - A(i).toArray(j))
+                   if(i == j){
+                     x(j) = c*(degr(i) - A2(i)(j))
+                   } else {
+                     x(j) = -c*A2(i)(j)
+                   } 
                 }
                 L = L ++ Array(x)
             }
@@ -35,17 +35,13 @@ object Entropy {
         return entropy
     }
 
-    def relative(layers: Array[Array[org.apache.spark.mllib.linalg.Vector]],sc: SparkContext): Double = {
-       //var H = 0.00
+    def relative(layers: Array[org.apache.spark.rdd.RDD[Array[Int]]], sc: SparkContext): Double = {
        var n = layers.size - 1
-       // for(i <- 0 to n){
-       //    H += VonNewmann(layers(i), sc)
-       // }
        var H = layers.map(C => VonNewmann(C, sc)).reduce((x,y) => x + y)
        return H/(n+1)
     }
 
-    def GlobalQuality(layers: Array[Array[org.apache.spark.mllib.linalg.Vector]], hA: Double, sc: SparkContext): Double = {
+    def GlobalQuality(layers: Array[org.apache.spark.rdd.RDD[Array[Int]]], hA: Double, sc: SparkContext): Double = {
        var q = 1 - relative(layers, sc)/hA
        return q
     }
