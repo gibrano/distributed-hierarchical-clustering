@@ -9,9 +9,8 @@ import org.apache.spark.mllib.linalg.distributed.RowMatrix
 
 object TM {
 
-  def termDocumentMatrix(texts: Array[String], sc: SparkContext): Array[org.apache.spark.mllib.linalg.Vector] = {
-    var corpus = sc.parallelize(texts)
-    var tokens = corpus.map(x => x.split(" "))
+  def termDocumentMatrix(texts: org.apache.spark.rdd.RDD[String], sc: SparkContext): Array[org.apache.spark.mllib.linalg.Vector] = {
+    var tokens = texts.map(x => x.split(" "))
     var dwords = sc.broadcast(tokens.flatMap(token => token).distinct().collect)
     val n = dwords.value.size
     var tdm = Array[org.apache.spark.mllib.linalg.Vector]()
