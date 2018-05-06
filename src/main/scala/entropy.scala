@@ -6,12 +6,12 @@ import org.apache.spark.SparkConf
 
 object Entropy {
 
-    def VonNewmann(A: org.apache.spark.rdd.RDD[Array[Int]], sc: SparkContext): Double = {
+    def VonNewmann(A: org.apache.spark.rdd.RDD[Array[Double]], sc: SparkContext): Double = {
         var entropy = 0.00
         var out = 0.00
         val E = A.map(i => i.sum).reduce((x,y) => x+y) // sum of edges
         if (E != 0){
-            val c = 1.00/E.toDouble
+            val c = 1.00/E
             val degr = A.map(r => r.sum).collect // degrees of nodes
             var A2 = A.collect
             val n = A2.size - 1
@@ -35,13 +35,13 @@ object Entropy {
         return entropy
     }
 
-    def relative(layers: Array[org.apache.spark.rdd.RDD[Array[Int]]], sc: SparkContext): Double = {
+    def relative(layers: Array[org.apache.spark.rdd.RDD[Array[Double]]], sc: SparkContext): Double = {
        var n = layers.size - 1
-       var H = layers.map(C => VonNewmann(C, sc)).reduce((x,y) => x + y)
+       var H = sc.parallelize(layers).map(C => VonNewmann(C, sc)).reduce((x,y) => x + y)
        return H/(n+1)
     }
 
-    def GlobalQuality(layers: Array[org.apache.spark.rdd.RDD[Array[Int]]], hA: Double, sc: SparkContext): Double = {
+    def GlobalQuality(layers: Array[org.apache.spark.rdd.RDD[Array[Double]]], hA: Double, sc: SparkContext): Double = {
        var q = 1.00 - relative(layers, sc)/hA
        return q
     }
