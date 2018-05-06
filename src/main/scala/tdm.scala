@@ -3,29 +3,22 @@ package dhclust
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
-import org.apache.spark.mllib.linalg.Vector
-import org.apache.spark.mllib.linalg.Vectors
-import org.apache.spark.mllib.linalg.distributed.RowMatrix
 
 object TM {
-
-  def termDocumentMatrix(texts: org.apache.spark.rdd.RDD[String], sc: SparkContext): Array[org.apache.spark.mllib.linalg.Vector] = {
+  def termDocumentMatrix(texts: org.apache.spark.rdd.RDD[String], sc: SparkContext): Array[Array[Int]] = {
     var tokens = texts.map(x => x.split(" "))
     var dwords = sc.broadcast(tokens.flatMap(token => token).distinct().collect)
     val n = dwords.value.size
-    var tdm = Array[org.apache.spark.mllib.linalg.Vector]()
-
+    var tdm = Array[Array[Int]]()
     var documents = sc.broadcast(tokens.collect)
     for( i <- documents.value){
-       var x = Vectors.zeros(n)
+       var x = Array.fill(n)(0)
        for( j <- i){
          var index = dwords.value.indexOf(j)
-         x.toArray(index) = 1
+         x(index) = 1
        }
        tdm = tdm ++ Array(x)
     }
-
     return tdm
   }
-
 }
