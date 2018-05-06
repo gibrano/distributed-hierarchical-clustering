@@ -3,11 +3,10 @@ package dhclust
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
-import org.apache.spark.mllib.linalg.{Vector,Vectors}
 
 object Decomposition {
   
-  def rotate(A: Array[org.apache.spark.mllib.linalg.Vector], k1: Int, k2: Int): Array[org.apache.spark.mllib.linalg.Vector] = {
+  def rotate(A: Array[Array[Double]], k1: Int, k2: Int): Array[Array[Double]] = {
     val n = A.size - 1
     var w = (A(k2)(k2) - A(k1)(k1))/(2*A(k1)(k2))
     var t = 0.00
@@ -21,19 +20,19 @@ object Decomposition {
     for(j <- 0 to n){
       var row1 = c*A(k1)(j) - s*A(k2)(j)
       var row2 = s*A(k1)(j) + c*A(k2)(j)
-      A(k1).toArray(j) = row1
-      A(k2).toArray(j) = row2
+      A(k1)(j) = row1
+      A(k2)(j) = row2
     }  
     for(j <- 0 to n){
       var col1 = c*A(j)(k1) - s*A(j)(k2)
       var col2 = s*A(j)(k1) + c*A(j)(k2)
-      A(j).toArray(k1) = col1
-      A(j).toArray(k2) = col2
+      A(j)(k1) = col1
+      A(j)(k2) = col2
     }  
     return A
   }
   
-  def pivot(A: Array[org.apache.spark.mllib.linalg.Vector]): (Array[Int], Double) = {
+  def pivot(A: Array[Array[Double]]): (Array[Int], Double) = {
     var i = 0
     var j = 1
     var max = A(i)(j)
@@ -50,7 +49,7 @@ object Decomposition {
     return (Array(i,j),max)
   }
 
-  def getEigen(D: Array[org.apache.spark.mllib.linalg.Vector]): Array[Double] = {
+  def getEigen(D: Array[Array[Double]]): Array[Double] = {
     val n = D.size - 1
     var eigenvalues = Array[Double]()
     for(i <- 0 to n){
@@ -61,7 +60,7 @@ object Decomposition {
     return eigenvalues
   }
 
-  def eigenValues(A: Array[org.apache.spark.mllib.linalg.Vector]): Array[Double] = {
+  def eigenValues(A: Array[Array[Double]]): Array[Double] = {
     var D = A
     var n = A.size
     var iter = 0
