@@ -49,20 +49,22 @@ object Graph {
        return out
     }
 
-    def aggregate(A: Array[Array[Int]], B: Array[Array[Int]]): Array[Array[Int]] = {
-        var n = A.size
+    def aggregate(A: org.apache.spark.rdd.RDD[Array[Int]], B: org.apache.spark.rdd.RDD[Array[Int]]): org.apache.spark.rdd.RDD[Array[Int]] = {
         var out = Array[Array[Int]]()
+        var A2 = A.collect
+        var B2 = B.collect
+        var n = A2.size
         for( i <- 0 to (n-1)){
            var x = Array.fill(n)(0)
            for(j <- 0 to (n-1)){
-               x(j) = A(i)(j) + B(i)(j)
+               x(j) = A2(i)(j) + B2(i)(j)
                if(x(j) > 1){
                   x(j) = 1
                }
            }
            out = out ++ Array(x)
         }
-       return out
+        var out2 = sc.parallelize(out)
+        return out2
     }
-
 }
