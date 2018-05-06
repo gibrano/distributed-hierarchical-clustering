@@ -17,14 +17,18 @@ object App {
     val filename = args(0)
     val tweets = sc.textFile("s3n://AKIAJ3WA6NVC2KBLWPKQ:wBcSpSmfm1uYy1mrvUfRU0m+JyXK3O0FcAMFZyjc@gibran-bucket/tweets/"+filename)
     val texts = tweets.collect
+    println(texts.mkString(" "))
     
     println("Creating term document matrix ...")
     val t1 = System.nanoTime
     val tdm = TM.termDocumentMatrix(texts, sc)
+    println(tdm.mkString(" "))
     println("Creating layers ...")
     var layers = tdm.map(doc => Graph.adjacencyMatrix(doc))
+    println(layers.mkString(" "))
     println("Starting clustering ...")
     val clusters = Clusters.Hierarchical(layers, sc)
+    println(clusters.mkString(" "))
     val duration = (System.nanoTime - t1) / 1e9d
     print("Duration Time:",duration, "Numbers of Cores", sc.getExecutorStorageStatus.length)
 
