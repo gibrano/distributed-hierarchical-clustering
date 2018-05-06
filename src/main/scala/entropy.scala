@@ -17,7 +17,7 @@ object Entropy {
             val n = A2.size - 1
             var L = Array[Array[Double]]()
             for(i <- 0 to n){
-                var x = Array.fill(n+1)(0)
+                var x = Array.fill(n+1)(0.00)
                 for(j <- 0 to n){
                    if(i == j){
                      x(j) = c*(degr(i) - A2(i)(j))
