@@ -2,7 +2,7 @@ package dhclust
 
 object Graph {
 
-    def adjacencyMatrix(v: Array[Int]): Array[Array[Int]] = {
+    def adjacencyMatrix(v: Array[Int]): org.apache.spark.rdd.RDD[Array[Int]] = {
        val n = v.size - 1
        var A = Array(Array.fill(n+1)(0))
        for( k <- 1 to n){
@@ -24,7 +24,8 @@ object Graph {
              }
           }
        }
-       return A
+       var B = sc.parallelize(A)
+       return B
     }
 
     def sumAllEntries(A: Array[Array[Int]]): Double = {
