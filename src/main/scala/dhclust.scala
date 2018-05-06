@@ -23,6 +23,7 @@ object Clusters {
     var q = Array[Double](globalquality)
 
     while(layers.size > 1){
+       println("Layers size", layers.size)
        var n = layers.size
        var coords = Array[Array[Int]](Array[Int]())
        for( i <- 0 to n-2){
