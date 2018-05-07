@@ -37,7 +37,7 @@ object Entropy {
 
     def relative(layers: Array[org.apache.spark.rdd.RDD[Array[Double]]], sc: SparkContext): Double = {
        var n = layers.size - 1
-       var H = sc.parallelize(layers).map(C => VonNewmann(C, sc)).reduce((x,y) => x + y)
+       var H = layers.map(C => VonNewmann(C, sc)).reduce((x,y) => x + y)
        return H/(n+1)
     }
 
