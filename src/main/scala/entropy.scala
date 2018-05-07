@@ -12,9 +12,15 @@ object Entropy {
         val E = A.map(i => i.sum).reduce((x,y) => x+y) // sum of edges
         if (E != 0){
             val c = 1.00/(2.00*E)
+            var index=sc.parallelize(0 to (A.size-1))
+            val n = A.size - 1
+            for(i <- 0 to ){
+              var d = index.map(j => A(j)(i)).reduce((x,y) => x+y)
+              var degr = degr ++ Array(d)   
+            }
             val degr = A.map(r => r.sum).collect // degrees of nodes
             var A2 = A.collect
-            val n = A2.size - 1
+            
             var L = Array[Array[Double]]()
             for(i <- 0 to n){
                 var x = Array.fill(n+1)(0.00)
