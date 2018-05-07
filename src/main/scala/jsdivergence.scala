@@ -6,7 +6,7 @@ import org.apache.spark.SparkConf
 
 object Divergence {
 
-  def JensenShannon(A: org.apache.spark.rdd.RDD[Array[Int]], B: org.apache.spark.rdd.RDD[Array[Int]], sc: SparkContext): Double = {
+  def JensenShannon(A: org.apache.spark.rdd.RDD[Array[Double]], B: org.apache.spark.rdd.RDD[Array[Double]], sc: SparkContext): Double = {
      var A2 = A.collect
      var B2 = B.collect
      var n = A2.size - 1
@@ -23,7 +23,7 @@ object Divergence {
      return r
   }
 
-  def computeJSD(x: Array[Int], layers: Array[org.apache.spark.rdd.RDD[Array[Int]]], sc: SparkContext) : Double = {
+  def computeJSD(x: Array[Int], layers: Array[org.apache.spark.rdd.RDD[Array[Double]]], sc: SparkContext) : Double = {
     var jsd = JensenShannon(layers(x(0)),layers(x(1)), sc)
     return jsd
   }
