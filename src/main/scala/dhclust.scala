@@ -6,7 +6,7 @@ import org.apache.spark.SparkConf
 
 object Clusters {
 
-  def Hierarchical(C: Array[org.apache.spark.rdd.RDD[Array[Int]]], sc: SparkContext): Array[Array[Int]] = {
+  def Hierarchical(C: Array[org.apache.spark.rdd.RDD[Array[Double]]], sc: SparkContext): Array[Array[Int]] = {
     var layers = C
     var n = layers.size - 1
     var A = layers(0)
