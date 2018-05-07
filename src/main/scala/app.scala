@@ -15,7 +15,7 @@ object App {
     
     println("Reading s3 file ...")
     val filename = args(0)
-    val tweets = sc.textFile("s3n://AKIAJ3WA6NVC2KBLWPKQ:wBcSpSmfm1uYy1mrvUfRU0m+JyXK3O0FcAMFZyjc@gibran-bucket/tweets/"+filename)
+    val tweets = sc.textFile("s3n://"+sys.env("AWS_ACCESS_KEY_ID")+":"+sys.env("AWS_SECRET_ACCESS_KEY")+"@gibran-bucket/tweets/"+filename)
     
     println("Creating term document matrix ...")
     val t1 = System.nanoTime
