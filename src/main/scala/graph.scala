@@ -6,7 +6,7 @@ import org.apache.spark.SparkConf
 
 object Graph {
 
-    def adjacencyMatrix(v: Array[Int]): org.apache.spark.rdd.RDD[Array[Double]] = {
+    def adjacencyMatrix(v: Array[Int], sc: SparkContext): org.apache.spark.rdd.RDD[Array[Double]] = {
        val n = v.size - 1
        var A = Array(Array.fill(n+1)(0.00))
        for( k <- 1 to n){
@@ -32,7 +32,7 @@ object Graph {
        return B
     }
 
-    def aggregate(A: org.apache.spark.rdd.RDD[Array[Double]], B: org.apache.spark.rdd.RDD[Array[Double]]): org.apache.spark.rdd.RDD[Array[Double]] = {
+    def aggregate(A: org.apache.spark.rdd.RDD[Array[Double]], B: org.apache.spark.rdd.RDD[Array[Double]], sc: SparkContext): org.apache.spark.rdd.RDD[Array[Double]] = {
         var out = Array[Array[Double]]()
         var A2 = A.collect
         var B2 = B.collect
