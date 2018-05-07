@@ -6,7 +6,7 @@ import org.apache.spark.SparkConf
 
 object Entropy {
 
-    def VonNewmann(A: org.apache.spark.rdd.RDD[Array[Double]], sc: SparkContext): Double = {
+    def VonNewmann(A: Array[Array[Double]], sc: SparkContext): Double = {
         var entropy = 0.00
         var out = 0.00
         val E = A.map(i => i.sum).reduce((x,y) => x+y) // sum of edges
