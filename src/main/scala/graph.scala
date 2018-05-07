@@ -1,5 +1,9 @@
 package dhclust
 
+import org.apache.spark.SparkContext
+import org.apache.spark.SparkContext._
+import org.apache.spark.SparkConf
+
 object Graph {
 
     def adjacencyMatrix(v: Array[Int]): org.apache.spark.rdd.RDD[Array[Double]] = {
