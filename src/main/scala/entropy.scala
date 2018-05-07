@@ -11,7 +11,7 @@ object Entropy {
         var out = 0.00
         val E = A.map(i => i.sum).reduce((x,y) => x+y) // sum of edges
         if (E != 0){
-            val c = 1.00/E
+            val c = 1.00/(2.00*E)
             val degr = A.map(r => r.sum).collect // degrees of nodes
             var A2 = A.collect
             val n = A2.size - 1
