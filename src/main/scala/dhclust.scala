@@ -45,7 +45,7 @@ object Clusters {
        var Cx = layers(a)
        var Cy = layers(b)
        t2 = System.nanoTime
-       var newlayer = Graph.aggregate(Cx,Cy)
+       var newlayer = Graph.aggregate(Cx,Cy, sc)
        duration2 = (System.nanoTime - t2) / 1e9d
        print("Duration time graph agg:",duration2)
        layers = layers.filter(_ != Cx)
