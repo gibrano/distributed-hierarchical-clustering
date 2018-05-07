@@ -11,7 +11,7 @@ object Clusters {
     var n = layers.size - 1
     var A = layers(0)
     for(i <- 1 to n){
-       A = Graph.aggregate(A,layers(i))
+       A = Graph.aggregate(A,layers(i), sc)
     }
     val hA = Entropy.VonNewmann(A, sc)
     var clusters = sc.parallelize(0 to n).map(i => Array(i)).collect
