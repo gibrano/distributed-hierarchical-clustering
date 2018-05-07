@@ -22,7 +22,7 @@ object App {
     val tdm = TM.termDocumentMatrix(tweets, sc)
     
     println("Creating layers ...")
-    var layers = tdm.map(doc => Graph.adjacencyMatrix(doc))
+    var layers = tdm.map(doc => Graph.adjacencyMatrix(doc, sc))
     
     println("Starting clustering ...")
     val clusters = Clusters.Hierarchical(layers, sc)
