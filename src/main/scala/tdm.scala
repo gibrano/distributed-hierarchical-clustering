@@ -5,19 +5,30 @@ import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
 
 object TM {
-  def termDocumentMatrix(texts: org.apache.spark.rdd.RDD[String], sc: SparkContext): Array[Array[Int]] = {
+  
+  def zeros(n: Int): scala.collection.mutable.Map[Int, Double] = {
+    var x = scala.collection.mutable.Map[Int, Double]()
+    for(i <- 0 to n-1){
+      x = x + (i -> 0.00)
+    }
+    return x
+  }
+  
+  def termDocumentMatrix(texts: org.apache.spark.rdd.RDD[String], sc: SparkContext): scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]] = {
     var tokens = texts.map(x => x.split(" "))
     var dwords = sc.broadcast(tokens.flatMap(token => token).distinct().collect)
     val n = dwords.value.size
-    var tdm = Array[Array[Int]]()
+    var tdm = scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int, Double]]()
     var documents = sc.broadcast(tokens.collect)
+    var k = 0
     for( i <- documents.value){
-       var x = Array.fill(n)(0)
+       var x = zeros(n)
        for( j <- i){
          var index = dwords.value.indexOf(j)
-         x(index) = 1
+         x(index) = 1.00
        }
-       tdm = tdm ++ Array(x)
+       tdm(k) = x
+       k = k + 1
     }
     return tdm
   }
