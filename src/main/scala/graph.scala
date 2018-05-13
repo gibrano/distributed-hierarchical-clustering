@@ -6,48 +6,34 @@ import org.apache.spark.SparkConf
 
 object Graph {
 
-    def adjacencyMatrix(v: Array[Int], sc: SparkContext): org.apache.spark.rdd.RDD[Array[Double]] = {
-       val n = v.size - 1
-       var A = Array(Array.fill(n+1)(0.00))
-       for( k <- 1 to n){
-          A =  A ++ Array(Array.fill(n+1)(0.00))
+    def adjacencyMatrix(v: scala.collection.mutable.Map[Int, Double], sc: SparkContext): scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]] = {
+       val n = v.size
+       var A = scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]]()
+       for( k <- 0 to (n-1)){
+          A(k) = TM.zeros(n)
        }
 
-       var index = Array[Int]()
-       for(i <- 0 to n){
-          if (v(i) >= 1.00){
-             index = index ++ Array(i)
-          }
-       }
-
-       for(i <- index){
-          for(j <- index){
-             if (i < j){
+       for(i <- 0 to (n-2)){
+          if(v(i) >= 1.00){ 
+            for(j <- (i+1) to (n-1)){ 
+              if(v(j) >= 1.00){
                 A(i)(j) = 1.00
-                A(j)(i) = 1.00
-             }
+                A(j)(i) = 1.00  
+              }
+            }    
           }
        }
-       var B = sc.parallelize(A)
-       return B
+       return A
     }
 
-    def aggregate(A: org.apache.spark.rdd.RDD[Array[Double]], B: org.apache.spark.rdd.RDD[Array[Double]], sc: SparkContext): org.apache.spark.rdd.RDD[Array[Double]] = {
-        var out = Array[Array[Double]]()
-        var A2 = A.collect
-        var B2 = B.collect
-        var n = A2.size
-        for( i <- 0 to (n-1)){
-           var x = Array.fill(n)(0.00)
-           for(j <- 0 to (n-1)){
-               x(j) = A2(i)(j) + B2(i)(j)
-               if(x(j) > 1){
-                  x(j) = 1.00
-               }
-           }
-           out = out ++ Array(x)
+    def aggregate(A:  scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]], B:  scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]]):  scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]] = {
+      var n = A.size
+      for( i <- 0 to (n-1)){
+        for(j <- i to (n-1)){
+          A(i)(j) = A(i)(j) + B(i)(j)
+          A(j)(i) = A(j)(i) + B(j)(i)
         }
-        var out2 = sc.parallelize(out)
-        return out2
+      }
+      return A
     }
 }
