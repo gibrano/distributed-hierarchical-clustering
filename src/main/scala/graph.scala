@@ -6,22 +6,16 @@ import org.apache.spark.SparkConf
 
 object Graph {
 
-    def adjacencyMatrix(v: scala.collection.mutable.Map[Int, Double], sc: SparkContext): scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]] = {
+    def adjacencyMatrix(v: scala.collection.mutable.Map[Int, Double]): scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]] = {
        val n = v.size
        var A = scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]]()
-       for( k <- 0 to (n-1)){
-          A(k) = TM.zeros(n)
-       }
-
-       for(i <- 0 to (n-2)){
-          if(v(i) >= 1.00){ 
-            for(j <- (i+1) to (n-1)){ 
-              if(v(j) >= 1.00){
-                A(i)(j) = 1.00
-                A(j)(i) = 1.00  
-              }
-            }    
-          }
+       for(i <- 0 to (n-1)){
+         for(j <- i to (n-1)){  
+           if(i != j && v(i) >= 1.00 && v(j) >= 1.00){
+             A.getOrElseUpdate(i,scala.collection.mutable.Map[Int,Double](j -> 1.00))
+             A.getOrElseUpdate(j,scala.collection.mutable.Map[Int,Double](i -> 1.00))
+           }  
+         }
        }
        return A
     }
@@ -30,8 +24,10 @@ object Graph {
       var n = A.size
       for( i <- 0 to (n-1)){
         for(j <- i to (n-1)){
-          A(i)(j) = A(i)(j) + B(i)(j)
-          A(j)(i) = A(j)(i) + B(j)(i)
+          var aij = A.getOrElse(i,scala.collection.mutable.Map[Int,Double](j -> 0.00)).getOrElse(j, 0.00)
+          var bij = B.getOrElse(i,scala.collection.mutable.Map[Int,Double](j -> 0.00)).getOrElse(j, 0.00)
+          A.update(i, scala.collection.mutable.Map[Int,Double](j -> (aij+bij)))
+          A.update(j, scala.collection.mutable.Map[Int,Double](i -> (aij+bij)))
         }
       }
       return A
