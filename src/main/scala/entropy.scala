@@ -6,10 +6,10 @@ import org.apache.spark.SparkConf
 
 object Entropy {
 
-    def VonNewmann(A: Array[Array[Double]], sc: SparkContext): Double = {
+    def VonNewmann(A: scala.collection.mutable.Map[Int, Double], sc: SparkContext): Double = {
         var entropy = 0.00
         var out = 0.00
-        val E = A.map(i => i.sum).reduce((x,y) => x+y) // sum of edges
+        val E = A.values.sum // sum of edges
         if (E != 0){
             val c = 1.00/(2.00*E)
             var index=sc.parallelize(0 to (A.size-1))
@@ -21,10 +21,10 @@ object Entropy {
             val degr = A.map(r => r.sum).collect // degrees of nodes
             var A2 = A.collect
             
-            var L = Array[Array[Double]]()
+            var L = scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]]()
             for(i <- 0 to n){
-                var x = Array.fill(n+1)(0.00)
-                for(j <- 0 to n){
+                var x = scala.collection.mutable.Map[Int,Double]()
+                for(j <- i to n){
                    if(i == j){
                      x(j) = c*(degr(i) - A2(i)(j))
                    } else {
