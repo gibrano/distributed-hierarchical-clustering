@@ -12,10 +12,10 @@ object TM {
     var tdm = scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int, Double]]()
     var documents = sc.broadcast(tokens.collect)
     var k = 0
-    for( i <- documents.value){
-       for( j <- i){
+    for(i <- documents.value){
+       for(j <- i){
          var index = dwords.value.indexOf(j)
-         tdm(k)(index) = 1.00
+         tdm(k) = scala.collection.mutable.Map(index -> 1.00)
        }
        k = k + 1
     }
