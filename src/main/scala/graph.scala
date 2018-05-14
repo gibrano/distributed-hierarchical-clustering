@@ -12,8 +12,8 @@ object Graph {
        for(i <- 0 to (n-1)){
          for(j <- i to (n-1)){  
            if(i != j && v(i) >= 1.00 && v(j) >= 1.00){
-             A.getOrElseUpdate(i,scala.collection.mutable.Map[Int,Double](j -> 1.00))
-             A.getOrElseUpdate(j,scala.collection.mutable.Map[Int,Double](i -> 1.00))
+             A.update(i,scala.collection.mutable.Map[Int,Double](j -> 1.00))
+             A.update(j,scala.collection.mutable.Map[Int,Double](i -> 1.00))
            }  
          }
        }
