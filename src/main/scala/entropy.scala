@@ -24,9 +24,9 @@ object Entropy {
                 for(j <- i to (n-1)){
                    if(i == j){
                      L(i)(j) = c*degree*doc(i)
-                   } else if(doc(i) >= 1.00 && doc(j) >= 1.00){
-                       L(i)(j) = -c
-                       L(j)(i) = -c
+                   } else if(doc(i) > 0.00 && doc(j) > 0.00){
+                       L(i)(j) = -c*doc(i)*doc(j)
+                       L(j)(i) = -c*doc(i)*doc(j)
                    } 
                 }
             }
