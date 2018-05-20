@@ -27,8 +27,8 @@ object Decomposition {
       A(k2)(j) = row2
     }  
     for(j <- 0 to n){
-      var col1 = c*A(j)(k1) - s*A(j)(k2)
-      var col2 = s*A(j)(k1) + c*A(j)(k2)
+      var col1 = c*A(j).getOrElse(k1,0.00) - s*A(j).getOrElse(k2,0.00)
+      var col2 = s*A(j).getOrElse(k1,0.00) + c*A(j).getOrElse(k2,0.00)
       A(j)(k1) = col1
       A(j)(k2) = col2
     }  
