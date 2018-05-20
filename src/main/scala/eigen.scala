@@ -22,7 +22,7 @@ object Decomposition {
     val s = t/(math.sqrt(1+t*t))
     for(j <- 0 to n){
       var row1 = c*A(k1).getOrElse(j,0.00) - s*A(k2).getOrElse(j,0.00)
-      var row1 = s*A(k1).getOrElse(j,0.00) + c*A(k2).getOrElse(j,0.00)
+      var row2 = s*A(k1).getOrElse(j,0.00) + c*A(k2).getOrElse(j,0.00)
       A(k1)(j) = row1
       A(k2)(j) = row2
     }  
@@ -35,17 +35,17 @@ object Decomposition {
     return A
   }
   
-  def pivot(A: Array[Array[Double]]): (Array[Int], Double) = {
+  def pivot(A: scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]]): (Array[Int], Double) = {
     var i = 0
     var j = 1
-    var max = A(i)(j)
+    var max = A(i).getOrElse(j,0.00)
     val n = A.size - 1
     for( k1 <- 0 to (n-1)){
       for( k2 <- (k1+1) to n){
-        if(max < math.abs(A(k1)(k2))){
+        if(max < math.abs(A(k1).getOrElse(k2,0.00))){
            i = k1
            j = k2
-           max = math.abs(A(k1)(k2))
+           max = math.abs(A(k1).getOrElse(k2,0.00))
         }
       }
     }
