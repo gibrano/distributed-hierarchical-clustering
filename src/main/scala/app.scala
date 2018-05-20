@@ -18,14 +18,15 @@ object App {
     val tweets = sc.textFile("s3n://"+sys.env("AWS_ACCESS_KEY_ID")+":"+sys.env("AWS_SECRET_ACCESS_KEY")+"@gibran-bucket/tweets/"+filename)
     
     println("Creating term document matrix ...")
-    val t1 = System.nanoTime
+    
     val tdm = TM.termDocumentMatrix(tweets, sc)
     
-    println("Creating layers ...")
-    var layers = tdm.map(doc => Graph.adjacencyMatrix(doc))
+    //println("Creating layers ...")
+    //var layers = tdm.map(doc => Graph.adjacencyMatrix(doc))
     
     println("Starting clustering ...")
-    val clusters = Clusters.Hierarchical(layers, sc)
+    val t1 = System.nanoTime
+    val clusters = Clusters.Hierarchical(tdm, sc)
     println(clusters.mkString(" "))
     val duration = (System.nanoTime - t1) / 1e9d
     print("Duration Time:",duration, "Numbers of Cores", sc.getExecutorStorageStatus.length)
