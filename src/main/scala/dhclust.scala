@@ -6,19 +6,24 @@ import org.apache.spark.SparkConf
 
 object Clusters {
 
-  def Hierarchical(C: Array[org.apache.spark.rdd.RDD[Array[Double]]], sc: SparkContext): Array[Array[Int]] = {
+  def Hierarchical(C: Array[Array[Double]], sc: SparkContext): Array[Array[Int]] = {
     var layers = C
     var n = layers.size - 1
+    var m = layers(0).size
+    //var A = Array.fill(m)(1.00)
     var A = layers(0)
     for(i <- 1 to n){
-       A = Graph.aggregate(A,layers(i), sc)
+      for(j <- 0 to (m-1)){
+        A(j) = A(j) + layers(i)(j)
+      }
     }
-    val hA = Entropy.VonNewmann(A, sc)
+    
+    val hA = Entropy.VonNewmann(A)
     var clusters = sc.parallelize(0 to n).map(i => Array(i)).collect
     var aux = clusters
     
     var t2 = System.nanoTime
-    var globalquality = Entropy.GlobalQuality(layers, hA, sc)
+    var globalquality = Entropy.GlobalQuality(layers, hA)
     var duration2 = (System.nanoTime - t2) / 1e9d
     print("Duration time global q:",duration2)
     println(globalquality)
@@ -36,7 +41,7 @@ object Clusters {
        }
        coords = coords.filter(_.size > 0)
        t2 = System.nanoTime
-       var jsdMatrix = coords.map(x => Divergence.computeJSD(x, layers, sc))
+       var jsdMatrix = coords.map(x => Divergence.computeJSD(x, layers))
        duration2 = (System.nanoTime - t2) / 1e9d
        print("Duration time div JS:",duration2)
        var minimum = jsdMatrix.zipWithIndex.min
@@ -44,10 +49,11 @@ object Clusters {
        var b = coords(minimum._2)(1)
        var Cx = layers(a)
        var Cy = layers(b)
-       t2 = System.nanoTime
-       var newlayer = Graph.aggregate(Cx,Cy, sc)
-       duration2 = (System.nanoTime - t2) / 1e9d
-       print("Duration time graph agg:",duration2)
+       //var newlayer = Graph.aggregate(Cx,Cy)
+       var newlayer = Array.fill(m)(0.00)
+       for(i <- 0 to (m-1)){
+         newlayer(i) = Cx(i) + Cy(i)
+       }
        layers = layers.filter(_ != Cx)
        layers = layers.filter(_ != Cy)
        layers = layers ++ Array(newlayer)
@@ -58,7 +64,7 @@ object Clusters {
        aux = aux.filter(_ != v2)
        aux = aux.union(Array(v1.union(v2)))
   
-       globalquality = Entropy.GlobalQuality(layers, hA, sc)
+       globalquality = Entropy.GlobalQuality(layers, hA)
        println(globalquality)
 
        if(globalquality >= max){
