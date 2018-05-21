@@ -25,8 +25,8 @@ object Entropy {
                    if(i == j){
                      L(i)(j) = c*degree*doc(i)
                    } else if(doc(i) > 0.00 && doc(j) > 0.00){
-                       L(i)(j) = -c*doc(i)*doc(j)
-                       L(j)(i) = -c*doc(i)*doc(j)
+                       L(i)(j) = -c*math.min(doc(i),doc(j))
+                       L(j)(i) = -c*math.min(doc(i),doc(j))
                    } 
                 }
             }
