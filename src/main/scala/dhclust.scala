@@ -10,23 +10,19 @@ object Clusters {
     var layers = C
     var n = layers.size - 1
     var m = layers(0).size
-    //var A = Array.fill(m)(1.00)
-    var A = layers(0)
-    for(i <- 1 to n){
-      for(j <- 0 to (m-1)){
-        A(j) = A(j) + layers(i)(j)
-      }
-    }
+    var A = Array.fill(m)(1.00)
+    //var A = layers(0)
+    //for(i <- 1 to n){
+    //  for(j <- 0 to (m-1)){
+    //    A(j) = A(j) + layers(i)(j)
+    // }
+    //}
     
     val hA = Entropy.VonNewmann(A)
     var clusters = sc.parallelize(0 to n).map(i => Array(i)).collect
     var aux = clusters
     
-    var t2 = System.nanoTime
     var globalquality = Entropy.GlobalQuality(layers, hA)
-    var duration2 = (System.nanoTime - t2) / 1e9d
-    print("Duration time global q:",duration2)
-    println(globalquality)
     var max = globalquality
     var q = Array[Double](globalquality)
 
@@ -43,17 +39,17 @@ object Clusters {
        t2 = System.nanoTime
        var jsdMatrix = coords.map(x => Divergence.computeJSD(x, layers))
        duration2 = (System.nanoTime - t2) / 1e9d
-       print("Duration time div JS:",duration2)
+       println("Duration time div JS:",duration2)
        var minimum = jsdMatrix.zipWithIndex.min
        var a = coords(minimum._2)(0)
        var b = coords(minimum._2)(1)
        var Cx = layers(a)
        var Cy = layers(b)
-       //var newlayer = Graph.aggregate(Cx,Cy)
-       var newlayer = Array.fill(m)(0.00)
-       for(i <- 0 to (m-1)){
-         newlayer(i) = Cx(i) + Cy(i)
-       }
+       var newlayer = Graph.aggregate(Cx,Cy)
+       //var newlayer = Array.fill(m)(0.00)
+       //for(i <- 0 to (m-1)){
+       //  newlayer(i) = Cx(i) + Cy(i)
+       //}
        layers = layers.filter(_ != Cx)
        layers = layers.filter(_ != Cy)
        layers = layers ++ Array(newlayer)
@@ -65,7 +61,7 @@ object Clusters {
        aux = aux.union(Array(v1.union(v2)))
   
        globalquality = Entropy.GlobalQuality(layers, hA)
-       println(globalquality)
+       println("Global quality:",globalquality)
 
        if(globalquality >= max){
          max = globalquality
