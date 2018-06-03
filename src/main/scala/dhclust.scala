@@ -29,9 +29,9 @@ object Clusters {
           }
        }
        coords = coords.filter(_.size > 0)
-       t2 = System.nanoTime
+       var t2 = System.nanoTime
        var jsdMatrix = coords.map(x => Divergence.computeJSD(x, layers))
-       duration2 = (System.nanoTime - t2) / 1e9d
+       var duration2 = (System.nanoTime - t2) / 1e9d
        println("Duration time div JS:",duration2)
        var minimum = jsdMatrix.zipWithIndex.min
        var a = coords(minimum._2)(0)
