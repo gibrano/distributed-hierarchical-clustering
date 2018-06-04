@@ -4,7 +4,7 @@ import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
 
-object Entropy {
+object Entropy extends Serializable {
 
     def VonNewmann(doc: Array[Double]): Double = {
         var n = doc.size
