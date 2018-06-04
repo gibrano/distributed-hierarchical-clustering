@@ -30,12 +30,12 @@ object Clusters {
        }
        coords = coords.filter(_.size > 0)
        var t2 = System.nanoTime
-       var jsdMatrix = coords.map(x => Divergence.computeJSD(x, layers))
+       var jsdMatrix = sc.parallelize(coords).map(x => Divergence.computeJSD(x, layers))
        var duration2 = (System.nanoTime - t2) / 1e9d
        println("Duration time div JS:",duration2)
        var minimum = jsdMatrix.zipWithIndex.min
-       var a = coords(minimum._2)(0)
-       var b = coords(minimum._2)(1)
+       var a = coords(minimum._2.toInt)(0)
+       var b = coords(minimum._2.toInt)(1)
        var Cx = layers(a)
        var Cy = layers(b)
        var newlayer = Graph.aggregate(Cx,Cy)
