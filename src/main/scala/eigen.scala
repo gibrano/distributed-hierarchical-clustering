@@ -4,7 +4,7 @@ import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
 
-object Decomposition {
+object Decomposition extends Serializable {
   
   def rotate(A: scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]], k1: Int, k2: Int): scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]] = {
     val n = A.size - 1
