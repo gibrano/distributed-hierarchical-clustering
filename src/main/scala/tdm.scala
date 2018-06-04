@@ -4,7 +4,7 @@ import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
 
-object TM {
+object TM extends Serializable {
   def termDocumentMatrix(texts: org.apache.spark.rdd.RDD[String], sc: SparkContext): Array[Array[Double]] = {
     var tokens = texts.map(x => x.split(" "))
     var dwords = sc.broadcast(tokens.flatMap(token => token).distinct().collect)
