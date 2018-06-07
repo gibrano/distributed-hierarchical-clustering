@@ -6,7 +6,7 @@ import org.apache.spark.SparkConf
 
 object Graph extends Serializable {
 
-    def adjacencyMatrix(v: Array[Int]): Array[Array[Double]] = {
+    def adjacencyMatrix(v: Array[Double]): Array[Array[Double]] = {
        val n = v.size
        var A = Array(Array.fill(n)(0.00))
        for( k <- 1 to (n-1)){
