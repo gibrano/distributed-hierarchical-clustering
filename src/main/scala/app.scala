@@ -18,12 +18,8 @@ object App {
     val tweets = sc.textFile("s3n://"+sys.env("AWS_ACCESS_KEY_ID")+":"+sys.env("AWS_SECRET_ACCESS_KEY")+"@gibran-bucket/tweets/"+filename)
     
     println("Creating term document matrix ...")
-    
     val tdm = TM.termDocumentMatrix(tweets, sc)
-    
-    //println("Creating layers ...")
-    //var layers = tdm.map(doc => Graph.adjacencyMatrix(doc))
-    
+ 
     println("Starting clustering ...")
     val t1 = System.nanoTime
     val clusters = Clusters.Hierarchical(tdm, sc)
