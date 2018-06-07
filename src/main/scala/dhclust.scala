@@ -20,9 +20,12 @@ object Clusters extends Serializable {
     val hA = Entropy.VonNewmann(A)
         
     //var globalquality = Entropy.GlobalQuality(C, hA)
+    var t2 = System.nanoTime
     var H = sc.parallelize(layers).map(layer => Entropy.VonNewmann(layer)).reduce((x,y) => x + y)
     var globalquality = 1.00 - ((H/l)/hA)
-        
+    var duration2 = (System.nanoTime - t2) / 1e9d
+    println("Duration time q(.):",duration2)
+    
     var q = Array[Double](globalquality)
 
     while(C.size > 1){
@@ -49,8 +52,11 @@ object Clusters extends Serializable {
       C = C.filter(_ != Cy)
       C = C ++ Array(newlayer)
       //globalquality = Entropy.GlobalQuality(C, hA)
+      var t2 = System.nanoTime
       var H = sc.parallelize(layers).map(layer => Entropy.VonNewmann(layer)).reduce((x,y) => x + y)
       var globalquality = 1.00 - ((H/C.size)/hA)
+      var duration2 = (System.nanoTime - t2) / 1e9d
+      println("Duration time q(.):",duration2)
       println("Global quality:",globalquality)
       q = q ++ Array(globalquality)
       linkages = linkages ++ Array(Array(a,b,globalquality))
