@@ -6,17 +6,19 @@ import org.apache.spark.SparkConf
 
 object Clusters {
 
-  def Hierarchical(C: Array[Array[Double]], sc: SparkContext): Array[Array[Int]] = {
-    var layers = C
-    var n = layers.size - 1
+  def Hierarchical(layers: Array[Array[Array[Double]]], sc: SparkContext): Array[Array[Int]] = {
+    var linkages = Array[Array[Double]]()
+    var l = layers.size
     var m = layers(0).size
-    var A = Array.fill(m)(1.00)
-    val hA = Entropy.VonNewmann(A)
-    var clusters = sc.parallelize(0 to n).map(i => Array(i)).collect
-    var aux = clusters
     
+    var A = layers(0)
+    for(i <- 1 to (l-1)){
+       A = Graph.aggregate(A,layers(i))
+    }
+    
+    val hA = Entropy.VonNewmann(A)
+        
     var globalquality = Entropy.GlobalQuality(layers, hA)
-    var max = globalquality
     var q = Array[Double](globalquality)
 
     while(layers.size > 1){
@@ -43,21 +45,12 @@ object Clusters {
        layers = layers.filter(_ != Cy)
        layers = layers ++ Array(newlayer)
 
-       var v1 = aux(a)
-       var v2 = aux(b)
-       aux = aux.filter(_ != v1)
-       aux = aux.filter(_ != v2)
-       aux = aux.union(Array(v1.union(v2)))
   
        globalquality = Entropy.GlobalQuality(layers, hA)
        println("Global quality:",globalquality)
-
-       if(globalquality >= max){
-         max = globalquality
-         clusters = aux
-       }
        q = q ++ Array(globalquality)
+       linkages = linkages ++ Array(Array(a,b,globalquality))
     }
-    return clusters
+    return linkages
   }
 }
