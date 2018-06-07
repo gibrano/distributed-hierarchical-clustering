@@ -40,7 +40,7 @@ object Entropy extends Serializable {
 
     def relative(layers: Array[Array[Array[Double]]]): Double = {
        var X = layers.size
-       var H = sc.parallelize(layers).map(layer => VonNewmann(layer)).reduce((x,y) => x + y)
+       var H = layers.map(layer => VonNewmann(layer)).reduce((x,y) => x + y)
        return H/X
     }
 
