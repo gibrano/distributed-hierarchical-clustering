@@ -10,8 +10,8 @@ object Entropy extends Serializable {
         var A = layer
         var n = layer.size
         var entropy = 0.00
-        var sumall = sc.parallelize(layer).map(row => row.sum).reduce((x,y) => x+y)
-        var dgr = sc.parallelize(layer).map(row => row.sum).collect
+        var sumall = layer.map(row => row.sum).reduce((x,y) => x+y)
+        var dgr = layer.map(row => row.sum)
         if (sumall != 0){
             var c = 1.00/sumall
             var L = scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]]()
