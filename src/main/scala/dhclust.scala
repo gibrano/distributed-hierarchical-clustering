@@ -24,7 +24,7 @@ object Clusters extends Serializable {
     var H = sc.parallelize(layers).map(layer => Entropy.VonNewmann(layer)).reduce((x,y) => x + y)
     var globalquality = 1.00 - ((H/l)/hA)
     var duration2 = (System.nanoTime - t2) / 1e9d
-    println("Duration time q(.):",duration2)
+    println("Global quality:",globalquality,"Duration time:",duration2)
     
     var q = Array[Double](globalquality)
 
@@ -38,9 +38,9 @@ object Clusters extends Serializable {
         }
       }
       coords = coords.filter(_.size > 0)
-      var t2 = System.nanoTime
+      t2 = System.nanoTime
       var jsdMatrix = sc.parallelize(coords).map(x => Divergence.computeJSD(x, C))
-      var duration2 = (System.nanoTime - t2) / 1e9d
+      duration2 = (System.nanoTime - t2) / 1e9d
       println("Duration time div JS:",duration2)
       var minimum = jsdMatrix.zipWithIndex.min
       var a = coords(minimum._2.toInt)(0)
@@ -52,12 +52,11 @@ object Clusters extends Serializable {
       C = C.filter(_ != Cy)
       C = C ++ Array(newlayer)
       //globalquality = Entropy.GlobalQuality(C, hA)
-      var t2 = System.nanoTime
+      t2 = System.nanoTime
       var H = sc.parallelize(layers).map(layer => Entropy.VonNewmann(layer)).reduce((x,y) => x + y)
       var globalquality = 1.00 - ((H/C.size)/hA)
-      var duration2 = (System.nanoTime - t2) / 1e9d
-      println("Duration time q(.):",duration2)
-      println("Global quality:",globalquality)
+      duration2 = (System.nanoTime - t2) / 1e9d
+      println("Global quality:",globalquality,"Duration time:",duration2)
       q = q ++ Array(globalquality)
       linkages = linkages ++ Array(Array(a,b,globalquality))
     }
