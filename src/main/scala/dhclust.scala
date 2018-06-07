@@ -6,7 +6,7 @@ import org.apache.spark.SparkConf
 
 object Clusters {
 
-  def Hierarchical(layers: Array[Array[Array[Double]]], sc: SparkContext): Array[Array[Int]] = {
+  def Hierarchical(layers: Array[Array[Array[Double]]], sc: SparkContext): Array[Array[Double]] = {
     var linkages = Array[Array[Double]]()
     var l = layers.size
     var m = layers(0).size
