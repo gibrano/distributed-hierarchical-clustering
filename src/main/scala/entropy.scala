@@ -6,15 +6,14 @@ import org.apache.spark.SparkConf
 
 object Entropy extends Serializable {
 
-    def VonNewmann(doc: Array[Double]): Double = {
-        var n = doc.size
+    def VonNewmann(layer: Array[Array[Double]]): Double = {
+        var A = layer
+        var n = layer.size
         var entropy = 0.00
-        var numberwords = doc.sum
-        var degree = numberwords - 1
-        var out = 0.00
-        var E = degree*(degree+1)/2.00 // # of edges (sum of n = n*(n+1)/2) 
-        if (E != 0){
-            var c = 1.00/(2*E)
+        var sumall = sc.parallelize(layer).map(row => row.sum).reduce((x,y) => x+y)
+        var dgr = sc.parallelize(layer).map(row => row.sum).collect
+        if (sumall != 0){
+            var c = 1.00/sumall
             var L = scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]]()
             for(i <- 0 to (n-1)){
               L(i) =  scala.collection.mutable.Map[Int,Double]()
@@ -23,10 +22,10 @@ object Entropy extends Serializable {
             for(i <- 0 to (n-1)){
                 for(j <- i to (n-1)){
                    if(i == j){
-                     L(i)(j) = c*degree*doc(i)
-                   } else if(doc(i) > 0.00 && doc(j) > 0.00){
-                       L(i)(j) = -c*math.min(doc(i),doc(j))
-                       L(j)(i) = -c*math.min(doc(i),doc(j))
+                     L(i)(j) = c*(dgr(i) - A(i)(j))
+                   } else {
+                     L(i)(j) = -c*A(i)(j)
+                     L(j)(i) = -c*A(j)(i)
                    } 
                 }
             }
@@ -39,13 +38,13 @@ object Entropy extends Serializable {
         return entropy
     }
 
-    def relative(tdm: Array[Array[Double]]): Double = {
-       var n = tdm.size - 1
-       var H = tdm.map(doc => VonNewmann(doc)).reduce((x,y) => x + y)
-       return H/(n+1)
+    def relative(layers: Array[Array[Array[Double]]]): Double = {
+       var X = layers.size
+       var H = sc.parallelize(layers).map(layer => VonNewmann(layer)).reduce((x,y) => x + y)
+       return H/X
     }
 
-    def GlobalQuality(layers: Array[Array[Double]], hA: Double): Double = {
+    def GlobalQuality(layers: Array[Array[Array[Double]]], hA: Double): Double = {
        var q = 1.00 - relative(layers)/hA
        return q
     }
