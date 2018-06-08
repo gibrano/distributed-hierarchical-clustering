@@ -5,6 +5,13 @@ import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
 
 object Clusters extends Serializable {
+  
+  def Coef(center: Double): Array[Double] {
+    var C = -(a/2) 
+    var B = math.log(a)
+    var A = 1/(2*a)
+    return Array(C,B,A)
+  }
 
   def Hierarchical(layers: Array[Array[Array[Double]]], sc: SparkContext): Array[Array[Double]] = {
     var C = layers
@@ -16,7 +23,12 @@ object Clusters extends Serializable {
     for(i <- 1 to (l-1)){
        A = Graph.aggregate(A,C(i))
     }
-    var par = Array(-0.03093753, -2.38570314, 4.47004207)
+    
+    var maxdgr = sc.parallelize(C).map(row => row.sum).reduce((x,y) => math.max(x,y))
+    var K = sc.parallelize(C).map(row => row.sum).reduce((x,y) => x+y)
+    var upperbound = maxdgr / K
+    var a = upperbound/2.00
+    var par = Coef(a)
     val hA = Entropy.VonNewmann2(A,par)
         
     //var globalquality = Entropy.GlobalQuality(C, hA)
