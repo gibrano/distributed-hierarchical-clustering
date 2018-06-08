@@ -6,6 +6,13 @@ import org.apache.spark.SparkConf
 
 object Clusters extends Serializable {
   
+  def Coef(a: Double): Array[Double] = {
+      var C = -(a/2) 
+      var B = math.log(a)
+      var A = 1/(2*a)
+      return Array(C,B,A)
+  }
+  
   def Hierarchical(layers: Array[Array[Array[Double]]], sc: SparkContext): Array[Array[Double]] = {
     var C = layers
     var linkages = Array[Array[Double]]()
@@ -17,12 +24,18 @@ object Clusters extends Serializable {
        A = Graph.aggregate(A,C(i))
     }
     
-    val hA = Entropy.VonNewmann2(A)
+    var sumall = sc.parallelize(A).map(row => row.sum).reduce((x,y) => x+y)
+    var K = sumall/2.00
+    var maxdgr = sc.parallelize(A).map(row => row.sum).reduce((x,y) => math.max(x,y))
+    var upperbound = maxdgr / K
+    var a = upperbound/2.00
+    var par = Coef(a)
+    
+    val hA = Entropy.VonNewmann2(A,par)
     println("Von Newmann entropy:", hA)
-    //var globalquality = Entropy.GlobalQuality(C, hA)
     println("Computing global quality ...")
     var t2 = System.nanoTime
-    var H = sc.parallelize(C).map(layer => Entropy.VonNewmann2(layer)).reduce((x,y) => x + y)
+    var H = sc.parallelize(C).map(layer => Entropy.VonNewmann2(layer,par)).reduce((x,y) => x + y)
     var globalquality = 1.00 - ((H/l)/hA)
     var duration2 = (System.nanoTime - t2) / 1e9d
     println("Global quality:",globalquality,"Duration time:",duration2)
@@ -52,10 +65,10 @@ object Clusters extends Serializable {
       C = C.filter(_ != Cx)
       C = C.filter(_ != Cy)
       C = C ++ Array(newlayer)
-      //globalquality = Entropy.GlobalQuality(C, hA)
+
       t2 = System.nanoTime
       println("Computing global quality ...")
-      var H = sc.parallelize(C).map(layer => Entropy.VonNewmann2(layer)).reduce((x,y) => x + y)
+      var H = sc.parallelize(C).map(layer => Entropy.VonNewmann2(layer,par)).reduce((x,y) => x + y)
       var globalquality = 1.00 - ((H/C.size)/hA)
       duration2 = (System.nanoTime - t2) / 1e9d
       println("Global quality:",globalquality,"Duration time:",duration2)
