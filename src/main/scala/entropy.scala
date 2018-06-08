@@ -38,12 +38,17 @@ object Entropy extends Serializable {
       return entropy
     }
     
-    def VonNewmann2(layer: Array[Array[Double]], par: Array[Double]): Double = {
+    def VonNewmann2(layer: Array[Array[Double]]): Double = {
       var A = layer
       var n = layer.size
       var entropy = 0.00
       var sumall = layer.map(row => row.sum).reduce((x,y) => x+y)
+      var K = sumall/2
       var dgr = layer.map(row => row.sum)
+      var maxdgr = dgr.reduce((x,y) => math.max(x,y))
+      var upperbound = maxdgr / K
+      var a = upperbound/2.00
+      var par = Coef(a)
       if (sumall != 0){
         var c = 1.00/sumall
         var TraceL1 = 0.00
@@ -62,7 +67,7 @@ object Entropy extends Serializable {
       }
       return entropy
     }
-    
+
     def TracePowMatrix(A: Array[Array[Double]], pow: Int): Double = {
       var n = A.size
       var trace = 0.0
