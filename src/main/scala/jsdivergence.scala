@@ -7,17 +7,19 @@ import org.apache.spark.SparkConf
 object Divergence extends Serializable {
 
   def JensenShannon(A: Array[Array[Double]], B: Array[Array[Double]], par: Array[Double]): Double = {
-     var C = Array[Array[Double]]()
-     var n = A.size
+     var C = A
+     var n = C.size
      for(i <- 0 to (n-1)){
-       var x = Array.fill(n)(0.00)
-       for(j <- 0 to (n-1)){
-         x(j) = 0.5*(A(i)(j)+B(i)(j))
-         if(x(j) > 1){
-           x(j) = 1
+       for(j <- i to (n-1)){
+         C(i)(j) = 0.5*(A(i)(j)+B(i)(j))
+         C(j)(i) = 0.5*(A(j)(i)+B(j)(i))
+         if(C(i)(j) > 1){
+           C(i)(j) = 1
+         }
+         if(C(j)(i) > 1){
+           C(j)(i) = 1
          }
        }
-       C = C ++ Array(x)
      }
      var r = Entropy.VonNewmann2(C,par)-(1/2)*(Entropy.VonNewmann2(A,par)+Entropy.VonNewmann2(B,par))
      return r
