@@ -26,7 +26,7 @@ object Divergence extends Serializable {
   }
 
   def computeJSD(x: Array[Int], layers: Array[Array[Array[Double]]]) : Double = {
-    var jsd = JensenShannon(layers(x(0)),layers(x(1)), par)
+    var jsd = JensenShannon(layers(x(0)),layers(x(1)))
     return jsd
   }
 
