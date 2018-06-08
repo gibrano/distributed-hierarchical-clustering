@@ -5,7 +5,14 @@ import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
 
 object Entropy extends Serializable {
-
+    
+    def Coef(a: Double): Array[Double] = {
+      var C = -(a/2) 
+      var B = math.log(a)
+      var A = 1/(2*a)
+      return Array(C,B,A)
+    }
+    
     def VonNewmann1(layer: Array[Array[Double]]): Double = {
       var A = layer
       var n = layer.size
