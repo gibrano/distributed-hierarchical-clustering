@@ -6,7 +6,7 @@ import org.apache.spark.SparkConf
 
 object Divergence extends Serializable {
 
-  def JensenShannon(A: Array[Array[Double]], B: Array[Array[Double]]): Double = {
+  def JensenShannon(A: Array[Array[Double]], B: Array[Array[Double]], par: Array[Double]): Double = {
      var C = Array[Array[Double]]()
      var n = A.size
      for(i <- 0 to (n-1)){
@@ -19,12 +19,12 @@ object Divergence extends Serializable {
        }
        C = C ++ Array(x)
      }
-     var r = Entropy.VonNewmann(C)-(1/2)*(Entropy.VonNewmann(A)+Entropy.VonNewmann(B))
+     var r = Entropy.VonNewmann2(C,par)-(1/2)*(Entropy.VonNewmann2(A,par)+Entropy.VonNewmann2(B,par))
      return r
   }
 
-  def computeJSD(x: Array[Int], layers: Array[Array[Array[Double]]]) : Double = {
-    var jsd = JensenShannon(layers(x(0)),layers(x(1)))
+  def computeJSD(x: Array[Int], layers: Array[Array[Array[Double]]], par: Array[Double]) : Double = {
+    var jsd = JensenShannon(layers(x(0)),layers(x(1)), par)
     return jsd
   }
 
