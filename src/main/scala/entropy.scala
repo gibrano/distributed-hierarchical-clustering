@@ -52,8 +52,9 @@ object Entropy extends Serializable {
           for(j <- i to (n-1)){
             if(i == j){
               TraceL1 = TraceL1 + c*(dgr(i) - A(i)(j))
+              TraceL2 = TraceL2 + c*c*(dgr(i) - A(i)(j))*(dgr(i) - A(i)(j))
             } else {
-              TraceL2 = TraceL2 + c*A(i)(j)*c*A(i)(j)
+              TraceL2 = TraceL2 + c*c*A(i)(j)*A(i)(j) + c*c*A(j)(i)*A(j)(i)
             } 
           }
         }
