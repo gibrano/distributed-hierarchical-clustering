@@ -18,7 +18,7 @@ object Clusters extends Serializable {
     }
     
     val hA = Entropy.VonNewmann2(A)
-        
+    println("Von Newmann entropy:", hA)
     //var globalquality = Entropy.GlobalQuality(C, hA)
     println("Computing global quality ...")
     var t2 = System.nanoTime
