@@ -6,13 +6,6 @@ import org.apache.spark.SparkConf
 
 object Entropy extends Serializable {
     
-    def Coef(a: Double): Array[Double] = {
-      var C = -(a/2) 
-      var B = math.log(a)
-      var A = 1/(2*a)
-      return Array(C,B,A)
-    }
-    
     def VonNewmann1(layer: Array[Array[Double]]): Double = {
       var A = layer
       var n = layer.size
@@ -45,17 +38,12 @@ object Entropy extends Serializable {
       return entropy
     }
     
-    def VonNewmann2(layer: Array[Array[Double]]): Double = {
+    def VonNewmann2(layer: Array[Array[Double]], par: Array[Double]): Double = {
       var A = layer
       var n = layer.size
       var entropy = 0.00
       var sumall = layer.map(row => row.sum).reduce((x,y) => x+y)
-      var K = sumall/2
       var dgr = layer.map(row => row.sum)
-      var maxdgr = dgr.reduce((x,y) => math.max(x,y))
-      var upperbound = maxdgr / K
-      var a = upperbound/2.00
-      var par = Coef(a)
       if (sumall != 0){
         var c = 1.00/sumall
         var TraceL1 = 0.00
@@ -74,28 +62,5 @@ object Entropy extends Serializable {
       }
       return entropy
     }
-
-    def TracePowMatrix(A: Array[Array[Double]], pow: Int): Double = {
-      var n = A.size
-      var trace = 0.0
-      if(pow == 1){  
-        for(i <- 0 to (n-1)){
-          trace = trace + A(i)(i)
-        }
-      } else if(pow == 2){
-        for(i <- 0 to (n-1)){
-          trace = trace + vectorProd(A(i),A(i))
-        }
-      }    
-      return trace  
-    }
-         
-    def vectorProd(x: Array[Double], y: Array[Double]): Double = {
-       var n = x.size
-       var sum = 0.00 
-       for(i <- 0 to (n-1)){
-          sum = sum + x(i)*y(i)
-       }
-       return sum 
-    }     
+ 
 }
