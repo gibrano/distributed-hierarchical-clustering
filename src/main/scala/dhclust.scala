@@ -6,7 +6,7 @@ import org.apache.spark.SparkConf
 
 object Clusters extends Serializable {
   
-  def Coef(center: Double): Array[Double] = {
+  def Coef(a: Double): Array[Double] = {
     var C = -(a/2) 
     var B = math.log(a)
     var A = 1/(2*a)
