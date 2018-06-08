@@ -24,8 +24,8 @@ object Clusters extends Serializable {
        A = Graph.aggregate(A,C(i))
     }
     
-    var maxdgr = sc.parallelize(C).map(row => row.sum).reduce((x,y) => math.max(x,y))
-    var K = sc.parallelize(C).map(row => row.sum).reduce((x,y) => x+y)
+    var maxdgr = sc.parallelize(A).map(row => row.sum).reduce((x,y) => math.max(x,y))
+    var K = sc.parallelize(A).map(row => row.sum).reduce((x,y) => x+y)
     var upperbound = maxdgr / K
     var a = upperbound/2.00
     var par = Coef(a)
