@@ -68,11 +68,11 @@ object Entropy extends Serializable {
       var trace = 0.0
       if(pow == 1){  
         for(i <- 0 to (n-1)){
-          trace = trace + vectorProd(A(i),A(i))
+          trace = trace + A(i)(i)
         }
       } else if(pow == 2){
         for(i <- 0 to (n-1)){
-          trace = trace + A(i)(i)
+          trace = trace + vectorProd(A(i),A(i))
         }
       }    
       return trace  
