@@ -16,13 +16,13 @@ object Clusters extends Serializable {
     for(i <- 1 to (l-1)){
        A = Graph.aggregate(A,C(i))
     }
-    
-    val hA = Entropy.VonNewmann(A)
+    var par = Array(-0.03093753, -2.38570314, 4.47004207)
+    val hA = Entropy.VonNewmann2(A,par)
         
     //var globalquality = Entropy.GlobalQuality(C, hA)
     println("Computing global quality ...")
     var t2 = System.nanoTime
-    var H = sc.parallelize(C).map(layer => Entropy.VonNewmann(layer)).reduce((x,y) => x + y)
+    var H = sc.parallelize(C).map(layer => Entropy.VonNewmann2(layer,par)).reduce((x,y) => x + y)
     var globalquality = 1.00 - ((H/l)/hA)
     var duration2 = (System.nanoTime - t2) / 1e9d
     println("Global quality:",globalquality,"Duration time:",duration2)
@@ -40,7 +40,7 @@ object Clusters extends Serializable {
       }
       coords = coords.filter(_.size > 0)
       t2 = System.nanoTime
-      var jsdMatrix = sc.parallelize(coords).map(x => Divergence.computeJSD(x, C))
+      var jsdMatrix = sc.parallelize(coords).map(x => Divergence.computeJSD(x, C, par))
       var minimum = jsdMatrix.zipWithIndex.min
       duration2 = (System.nanoTime - t2) / 1e9d
       println("Duration time div JS:",duration2)
@@ -55,7 +55,7 @@ object Clusters extends Serializable {
       //globalquality = Entropy.GlobalQuality(C, hA)
       t2 = System.nanoTime
       println("Computing global quality ...")
-      var H = sc.parallelize(C).map(layer => Entropy.VonNewmann(layer)).reduce((x,y) => x + y)
+      var H = sc.parallelize(C).map(layer => Entropy.VonNewmann2(layer,par)).reduce((x,y) => x + y)
       var globalquality = 1.00 - ((H/C.size)/hA)
       duration2 = (System.nanoTime - t2) / 1e9d
       println("Global quality:",globalquality,"Duration time:",duration2)
