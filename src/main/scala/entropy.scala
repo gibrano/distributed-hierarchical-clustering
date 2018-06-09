@@ -48,17 +48,16 @@ object Entropy extends Serializable {
         var c = 1.00/sumall
         var TraceL1 = 0.00
         var TraceL2 = 0.00  
+        var TraceL3 = 0.00    
         for(i <- 0 to (n-1)){
-          for(j <- i to (n-1)){
-            if(i == j){
-              TraceL1 = TraceL1 + c*(dgr(i) - A(i)(j))
-              TraceL2 = TraceL2 + c*c*(dgr(i) - A(i)(j))*(dgr(i) - A(i)(j))
-            } else {
-              TraceL2 = TraceL2 + c*c*A(i)(j)*A(i)(j) + c*c*A(j)(i)*A(j)(i)
-            } 
-          }
+          TraceL1 = TraceL1 + dgr(i)
+          TraceL2 = TraceL2 + math.pow(dgr(i),2) + dgr(i)
+          TraceL3 = TraceL3 + math.pow(dgr(i),3) + math.pow(dgr(i),2) + dgr(i)
         }
-        entropy = - par(0)*n - par(1)*TraceL1 - par(2)*TraceL2
+        TraceL1 = c*TraceL1
+        TraceL2 = math.pow(c,2)*TraceL2
+        TraceL3 = math.pow(c,3)*TraceL3  
+        entropy = - par(0)*n - par(1)*TraceL1 - par(2)*TraceL2 - par(3)*TraceL3
       }
       return entropy
     }
