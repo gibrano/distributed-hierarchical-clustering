@@ -8,7 +8,9 @@ object Divergence extends Serializable {
   
   def JensenShannon(A: Array[Array[Double]], B: Array[Array[Double]],par: Array[Double]): Double = {
     var n = A.size
-    var entropy = 0.00
+    var entropyA = 0.00
+    var entropyB = 0.00
+    var entropyC = 0.00
     var TraceAL1 = 0.00
     var TraceAL2 = 0.00  
     var TraceAL3 = 0.00
