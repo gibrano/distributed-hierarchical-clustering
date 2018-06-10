@@ -42,18 +42,20 @@ object Entropy extends Serializable {
       var A = layer
       var n = layer.size
       var entropy = 0.00
-      var sumall = layer.map(row => row.sum).reduce((x,y) => x+y)
-      var dgr = layer.map(row => row.sum)
       if (sumall != 0){
-        var c = 1.00/sumall
         var TraceL1 = 0.00
         var TraceL2 = 0.00  
-        var TraceL3 = 0.00    
+        var TraceL3 = 0.00
+        var sumall = 0.00
+        var dgr = Array[Double]()  
         for(i <- 0 to (n-1)){
+          dgr = dgr ++ Array(layer(i).sum)
+          sumall = sumall + dgr(i) 
           TraceL1 = TraceL1 + dgr(i)
           TraceL2 = TraceL2 + math.pow(dgr(i),2) + dgr(i)
           TraceL3 = TraceL3 + math.pow(dgr(i),3) + math.pow(dgr(i),2) + dgr(i)
         }
+        var c = 1.00/sumall  
         TraceL1 = c*TraceL1
         TraceL2 = math.pow(c,2)*TraceL2
         TraceL3 = math.pow(c,3)*TraceL3  
