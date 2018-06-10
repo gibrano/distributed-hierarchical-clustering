@@ -11,7 +11,7 @@ object Clusters extends Serializable {
       var C = math.log(a) - 0.5
       var B = 1/a
       var A = -1/(6*math.pow(a,2))
-      return Array(C,B,A)
+      return Array(D,C,B,A)
   }
   
   def Hierarchical(layers: Array[Array[Array[Double]]], sc: SparkContext): Array[Array[Double]] = {
