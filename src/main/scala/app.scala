@@ -10,7 +10,7 @@ object App {
     val rootLogger = Logger.getRootLogger()
     rootLogger.setLevel(Level.ERROR)
 
-    val conf = new SparkConf(true).setAppName("Distributed Hierarchical Clustering")
+    val conf = new SparkConf(true).setAppName("Distributed Hierarchical Clustering").setConf("spark.driver.maxResultSize", "20G")
     val sc = new SparkContext(conf)
     
     println("Reading s3 file ...")
