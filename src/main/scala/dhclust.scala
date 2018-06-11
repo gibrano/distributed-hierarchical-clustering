@@ -46,6 +46,7 @@ object Clusters extends Serializable {
     while(C.size > 1){
       var n = C.size
       println("Layers size", n)
+      t2 = System.nanoTime
       var coords = Array[Array[Int]](Array[Int]())
       for( i <- 0 to n-2){
         for(j <- i+1 to n-1){
@@ -53,6 +54,8 @@ object Clusters extends Serializable {
         }
       }
       coords = coords.filter(_.size > 0)
+      duration2 = (System.nanoTime - t2) / 1e9d
+      println("Duration time coords:",duration2)
       t2 = System.nanoTime
       var jsdMatrix = sc.parallelize(coords).map(x => Divergence.computeJSD(x, C,par))
       var minimum = jsdMatrix.zipWithIndex.min
