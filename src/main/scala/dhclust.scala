@@ -55,7 +55,7 @@ object Clusters extends Serializable {
       }
       coords = coords.filter(_.size > 0)
       duration2 = (System.nanoTime - t2) / 1e9d
-      println("Duration time coords:",duration2)
+      println("Numbers of pairs",coods.size,"Duration time coords:",duration2)
       t2 = System.nanoTime
       var jsdMatrix = sc.parallelize(coords).map(x => Divergence.computeJSD(x, C,par))
       var minimum = jsdMatrix.zipWithIndex.min
