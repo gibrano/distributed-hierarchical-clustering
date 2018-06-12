@@ -21,11 +21,11 @@ object App {
     val tdm = TM.termDocumentMatrix(tweets, sc)
     
     println("Creating layers ...")
-    var layers = sc.parallelize(0 to (tdm.size-1)).map(i => Graph.adjacencyMatrix(tdm(i))).collect
+    var layers = sc.parallelize(0 to (tdm._1.size-1)).map(i => Graph.adjacencyMatrix(tdm._1(i))).collect
  
     println("Starting clustering ...")
     val t1 = System.nanoTime
-    val results = Clusters.Hierarchical(layers, sc)
+    val results = Clusters.Hierarchical(layers, sc, tdm._2)
     val duration = (System.nanoTime - t1) / 1e9d
     print("Duration Time:",duration, "Numbers of Cores", sc.getExecutorStorageStatus.length)
     sc.parallelize(results).map(i => i.mkString(",")).coalesce(1).saveAsTextFile("s3n://"+sys.env("AWS_ACCESS_KEY_ID")+":"+sys.env("AWS_SECRET_ACCESS_KEY")+"@gibran-bucket/results"+layers.size)
