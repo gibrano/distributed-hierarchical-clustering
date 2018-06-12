@@ -44,9 +44,8 @@ object Entropy extends Serializable {
       var TraceL2 = 0.00  
       var TraceL3 = 0.00
       var sumall = 0.00
-      var dgr = Array[Double]()  
       for(i <- layer.keys){
-        dgr = layer(i).values.sum
+        var dgr = layer(i).values.sum
         sumall = sumall + dgr 
         TraceL1 = TraceL1 + dgr
         TraceL2 = TraceL2 + math.pow(dgr,2) + dgr
