@@ -14,7 +14,7 @@ object Clusters extends Serializable {
       return Array(D,C,B,A)
   }
   
-  def Hierarchical(layers: Array[scala.collection.mutable.Map[Int,scala.collection.mutable.Map[Int,Double]]], sc: SparkContext, n: Int): Array[Array[Double]] = {
+  def Hierarchical(layers: Array[Array[Array[Double]]], sc: SparkContext, n: Int): Array[Array[Double]] = {
     var C = layers
     var linkages = Array[Array[Double]]()
     var l = C.size
@@ -24,9 +24,9 @@ object Clusters extends Serializable {
        A = Graph.aggregate(A,C(i))
     }
     
-    var sumall = sc.parallelize(layers(0).keys.toSeq).map(i => layers(0)(i).values.sum).reduce((x,y) => x+y)
-    var maxdgr = sc.parallelize(layers(0).keys.toSeq).map(i => layers(0)(i).values.sum).max
-    var K = sumall/2.00
+    var K = A.size
+    var sumall = 2*K
+    var maxdgr =  sc.parallelize(A).flatMap(row => row).map(i =>(i,1)).reduceByKey((x,y)=>x+y).max._2
     var upperbound = maxdgr / K
     var a = upperbound/2.00
     var par = Coef(a)
