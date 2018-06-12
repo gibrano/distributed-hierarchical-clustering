@@ -5,7 +5,7 @@ import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
 
 object TM extends Serializable {
-  def termDocumentMatrix(texts: org.apache.spark.rdd.RDD[String], sc: SparkContext): scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]] = {
+  def termDocumentMatrix(texts: org.apache.spark.rdd.RDD[String], sc: SparkContext): (scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Double]], Int) = {
     var tokens = texts.map(x => x.split(" ")).cache()
     var dwords = sc.broadcast(tokens.flatMap(token => token).distinct().collect)
     val n = dwords.value.size
@@ -21,6 +21,6 @@ object TM extends Serializable {
        tdm(i) = x
       i = i + 1
     }
-    return tdm
+    return (tdm, dwords.size)
   }
 }
