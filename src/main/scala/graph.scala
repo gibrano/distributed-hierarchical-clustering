@@ -19,8 +19,6 @@ object Graph extends Serializable {
     }
 
     def aggregate(A: Array[Array[Double]], B: Array[Array[Double]]): Array[Array[Double]] = {
-      var C = Array[Array[Double]]()
-      var keys = A.keys ++ B.keys
       var C = A ++ B
       C = C.distinct()
       return C
