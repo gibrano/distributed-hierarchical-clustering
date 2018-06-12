@@ -38,14 +38,14 @@ object Entropy extends Serializable {
       return entropy
     }
     
-    def VonNewmann2(layer: scala.collection.mutable.Map[Int,scala.collection.mutable.Map[Int,Double]], par: Array[Double]): Double = {
+    def VonNewmann2(layer: scala.collection.mutable.Map[Int,scala.collection.mutable.Map[Int,Double]], par: Array[Double], n: Int): Double = {
       var entropy = 0.00
       var TraceL1 = 0.00
       var TraceL2 = 0.00  
       var TraceL3 = 0.00
       var sumall = 0.00
       var dgr = Array[Double]()  
-      for(i <- layers.keys){
+      for(i <- layer.keys){
         dgr = dgr ++ Array(layer(i).sum)
         sumall = sumall + dgr(i) 
         TraceL1 = TraceL1 + dgr(i)
