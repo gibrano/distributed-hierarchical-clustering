@@ -9,12 +9,12 @@ object App {
   def main(args: Array[String]) {
     val rootLogger = Logger.getRootLogger()
     rootLogger.setLevel(Level.ERROR)
-
-    val conf = new SparkConf(true).setAppName("Distributed Hierarchical Clustering")
+    val filename = args(0)
+    
+    val conf = new SparkConf(true).setAppName("Distributed Hierarchical Clustering -"+filename)
     val sc = new SparkContext(conf)
     
-    println("Reading s3 file ...")
-    val filename = args(0)
+    println("Reading s3 file ...")    
     val tweets = sc.textFile("s3n://"+sys.env("AWS_ACCESS_KEY_ID")+":"+sys.env("AWS_SECRET_ACCESS_KEY")+"@gibran-bucket/tweets/"+filename)
     
     println("Creating term document matrix ...")
