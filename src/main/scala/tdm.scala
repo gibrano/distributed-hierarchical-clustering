@@ -21,6 +21,6 @@ object TM extends Serializable {
        tdm(i) = x
       i = i + 1
     }
-    return (tdm, dwords.size)
+    return (tdm,n)
   }
 }
