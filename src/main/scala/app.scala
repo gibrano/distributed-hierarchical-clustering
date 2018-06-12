@@ -11,7 +11,7 @@ object App {
     rootLogger.setLevel(Level.ERROR)
     val filename = args(0)
     
-    val conf = new SparkConf(true).setAppName("Distributed Hierarchical Clustering -"+filename)
+    val conf = new SparkConf(true).setAppName("Distributed Hierarchical Clustering - "+filename)
     val sc = new SparkContext(conf)
     
     println("Reading s3 file ...")    
