@@ -62,6 +62,7 @@ object Clusters extends Serializable {
       println("Duration time div JS:",duration2)
       var a = coords(minimum._2.toInt)(0)
       var b = coords(minimum._2.toInt)(1)
+      println("Merging layers",a,b)
       var Cx = C(a)
       var Cy = C(b)
       var newlayer = Graph.aggregate(Cx,Cy)
