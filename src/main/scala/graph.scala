@@ -30,8 +30,8 @@ object Graph extends Serializable {
        for(i <- 0 to (n-1)){
          var a = A(i)(0).toInt
          var b = A(i)(1).toInt
-         d(a) = d.getOrElse(a, 0.00) + 1.00
-         d(b) = d.getOrElse(b, 0.00) + 1.00
+         d(a) = d.getOrElse(a, 0.00) + A(i)(2)
+         d(b) = d.getOrElse(b, 0.00) + A(i)(2)
        }
        return d 
     }
