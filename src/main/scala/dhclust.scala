@@ -23,7 +23,7 @@ object Clusters extends Serializable {
     for(i <- 1 to (l-1)){
        A = Graph.aggregate(A,C(i))
     }
-    println("A = "+ A.mkString(", ").mkString(" "))
+
     println("Computing taylor coefficients  ...")
     var K = A.size
     var sumall = 2*K
@@ -84,7 +84,6 @@ object Clusters extends Serializable {
       q = q ++ Array(globalquality)
       linkages = linkages ++ Array(Array(a,b,globalquality))
     }
-    println("C = "+ C.mkString(", ").mkString(" "))
     return linkages
   }
 }
