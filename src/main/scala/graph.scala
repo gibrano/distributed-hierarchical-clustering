@@ -22,9 +22,10 @@ object Graph extends Serializable {
       var C = A ++ B
       var n = C.size
       var i = 0  
-      while(i < (C.size-1)){
-        for(j <- (i+1) to (C.size-1)){
-          if(C(i).deep == C(j).deep){
+      while(i < C.size){
+        var j = (i+1)  
+        while(j < C.size){
+          if(i != j && C(i).deep == C(j).deep){
             C = C.filter(_ != C(j))
           }
         }
