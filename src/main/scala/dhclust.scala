@@ -26,7 +26,7 @@ object Clusters extends Serializable {
     
     var K = A.size
     var sumall = 2*K
-    var maxdgr = Graph.degrees(layer).values.max
+    var maxdgr = Graph.degrees(A).values.max
     var upperbound = maxdgr / K
     var a = upperbound/2.00
     var par = Coef(a)
