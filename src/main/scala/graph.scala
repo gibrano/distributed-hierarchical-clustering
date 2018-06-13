@@ -11,7 +11,7 @@ object Graph extends Serializable {
        for(i <- v){
          for(j <- v){
            if(i._1 < j._1){
-             A = A ++ Array(Array(i._1,j._1))  
+             A = A ++ Array(Array(i._1,j._1,1.0))  
            }    
          }
        } 
