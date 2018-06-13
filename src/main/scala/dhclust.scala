@@ -83,7 +83,7 @@ object Clusters extends Serializable {
       q = q ++ Array(globalquality)
       linkages = linkages ++ Array(Array(a,b,globalquality))
     }
-    println("C = "+ C)
+    println("C = "+ C.mkString(", ").mkString(" "))
     return linkages
   }
 }
