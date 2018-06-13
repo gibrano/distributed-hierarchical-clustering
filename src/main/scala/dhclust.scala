@@ -46,12 +46,12 @@ object Clusters extends Serializable {
     var q = Array[Double](globalquality)
 
     while(C.size > 1){
-      var n = C.size
-      println("Layers size", n)
+      l = C.size
+      println("Layers size", l)
       t2 = System.nanoTime
       var coords = Array[Array[Int]](Array[Int]())
-      for( i <- 0 to n-2){
-        for(j <- i+1 to n-1){
+      for( i <- 0 to l-2){
+        for(j <- i+1 to l-1){
           coords = coords ++ Array(Array(i,j))
         }
       }
