@@ -18,12 +18,13 @@ object Clusters extends Serializable {
     var C = layers
     var linkages = Array[Array[Double]]()
     var l = C.size
-        
+    println("Aggregating complete layers ...")
     var A = layers(0)
     for(i <- 1 to (l-1)){
        A = Graph.aggregate(A,C(i))
     }
     
+    println("Computing taylor coefficients  ...")
     var K = A.size
     var sumall = 2*K
     var maxdgr = Graph.degrees(A).values.max
@@ -31,6 +32,7 @@ object Clusters extends Serializable {
     var a = upperbound/2.00
     var par = Coef(a)
     
+    println("Computing Von Newmann entropy of A ...")
     val hA = Entropy.VonNewmann2(A,par,n)
     println("Von Newmann entropy:", hA)
     println("Computing global quality ...")
