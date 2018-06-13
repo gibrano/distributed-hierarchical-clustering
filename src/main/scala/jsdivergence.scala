@@ -6,12 +6,10 @@ import org.apache.spark.SparkConf
 
 object Divergence extends Serializable {
   
-  def JensenShannon(A: scala.collection.mutable.Map[Int,scala.collection.mutable.Map[Int,Double]], B: scala.collection.mutable.Map[Int,scala.collection.mutable.Map[Int,Double]],par: Array[Double], n: Int): Double = {
+  def JensenShannon(A: Array[Array[Double]], B: Array[Array[Double]],par: Array[Double], n: Int): Double = {
     var C = Graph.aggregate(A,B)
-    for(i <- C.keys){
-      for(j <- C(i).keys){
-        C(i)(j) = 0.5*C(i)(j)
-      }  
+    for(i <- C.size){
+        C(i)(2) = 0.5*C(i)(2)
     }
     var entropyA = Entropy.VonNewmann2(A,par,n)
     var entropyB = Entropy.VonNewmann2(B,par,n)
@@ -20,7 +18,7 @@ object Divergence extends Serializable {
     return r
   }  
   
-  def computeJSD(x: Array[Int], layers: Array[scala.collection.mutable.Map[Int,scala.collection.mutable.Map[Int,Double]]], par: Array[Double], n: Int) : Double = {
+  def computeJSD(x: Array[Int], layers: Array[Array[Array[Double]]], par: Array[Double], n: Int) : Double = {
     var jsd = JensenShannon(layers(x(0)),layers(x(1)),par,n)
     return jsd
   }
