@@ -8,7 +8,8 @@ object Divergence extends Serializable {
   
   def JensenShannon(A: Array[Array[Double]], B: Array[Array[Double]],par: Array[Double], n: Int): Double = {
     var C = Graph.aggregate(A,B)
-    for(i <- C.size){
+    var n = C.size
+    for(i <- 0 to (n-1)){
         C(i)(2) = 0.5*C(i)(2)
     }
     var entropyA = Entropy.VonNewmann2(A,par,n)
