@@ -48,7 +48,7 @@ object Entropy extends Serializable {
       for(dgr <- degrees){ 
         TraceL1 = TraceL1 + dgr
         TraceL2 = TraceL2 + math.pow(dgr,2) + dgr
-        TraceL3 = TraceL3 + math.pow(dgr,3) + math.pow(dgr,2) - dgr
+        TraceL3 = TraceL3 + math.pow(dgr,3) + 3*math.pow(dgr,2) - dgr
       }
       var c = 1.00/sumall  
       TraceL1 = c*TraceL1
