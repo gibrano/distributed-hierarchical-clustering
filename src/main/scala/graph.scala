@@ -20,7 +20,7 @@ object Graph extends Serializable {
 
     def aggregate(A: Array[Array[Double]], B: Array[Array[Double]]): Array[Array[Double]] = {
       var C = A ++ B
-      C = C.deep.distinct
+      C = C.deep.distinct.toArray
       return C
     }
     
