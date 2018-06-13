@@ -35,7 +35,7 @@ object Clusters extends Serializable {
     println("Von Newmann entropy:", hA)
     println("Computing global quality ...")
     var t2 = System.nanoTime
-    var H = sc.parallelize(0 to (C.size-1)).map(i => Entropy.VonNewmann2(C(i),par,n)).reduce((x,y) => x + y)
+    var H = sc.parallelize(C).map(layer => Entropy.VonNewmann2(layer,par,n)).reduce((x,y) => x + y)
     println("Sum of Von Newmann entropy H =",H)
     var globalquality = 1.00 - ((H/l)/hA)
     var duration2 = (System.nanoTime - t2) / 1e9d
@@ -73,7 +73,7 @@ object Clusters extends Serializable {
 
       t2 = System.nanoTime
       println("Computing global quality ...")
-      var H = sc.parallelize(0 to (C.size-1)).map(i => Entropy.VonNewmann2(C(i),par,n)).reduce((x,y) => x + y)
+      var H = sc.parallelize(C).map(layer => Entropy.VonNewmann2(layer,par,n)).reduce((x,y) => x + y)
       println("Sum of Von Newmann entropy H =",H)
       var globalquality = 1.00 - ((H/C.size)/hA)
       duration2 = (System.nanoTime - t2) / 1e9d
