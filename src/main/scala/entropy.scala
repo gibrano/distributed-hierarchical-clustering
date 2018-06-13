@@ -41,11 +41,11 @@ object Entropy extends Serializable {
     def VonNewmann2(layer: Array[Array[Double]], par: Array[Double], n: Int): Double = {
       var entropy = 0.00
       var TraceL1 = 0.00
-      var TraceL2 = 0.00  
+      var TraceL2 = 0.00
       var TraceL3 = 0.00
       var sumall = 2*layer.size
-      var dgrees = layer.flatMap(row => row).map(i =>(i,1)).reduceByKey((x,y)=>x+y) 
-      for(dgr <- degrees){ 
+      var dgrees = Graph.degrees(layer).values
+      for(dgr <- degrees){
         TraceL1 = TraceL1 + dgr
         TraceL2 = TraceL2 + math.pow(dgr,2) + dgr
         TraceL3 = TraceL3 + math.pow(dgr,3) + 3*math.pow(dgr,2) - dgr
