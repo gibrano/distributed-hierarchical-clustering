@@ -27,7 +27,8 @@ object Graph extends Serializable {
           if(C(i).deep == C(j).deep){
             C = C.filter(_ != C(j))
           }
-        }     
+        }
+        i = i + 1  
       }
       return C
     }
