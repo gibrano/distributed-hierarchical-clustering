@@ -26,11 +26,14 @@ object Graph extends Serializable {
     
     def degrees(A: Array[Array[Double]]): scala.collection.mutable.Map[Int,Double] = {
        var n = A.size
-        var d = scala.collection.mutable.Map[Int,Double]()
+       var d = scala.collection.mutable.Map[Int,Double]()
        for(i <- 0 to (n-1)){
-         d(A(i)(0).toInt) = d.getOrElse(A(i)(0).toInt, 0.00) + 1.00
-         d(A(i)(1).toInt) = d.getOrElse(A(i)(1).toInt, 0.00) + 1.00
-       }     
+         var a = A(i)(0).toInt
+         var b = A(i)(1).toInt
+         d(a) = d.getOrElse(a, 0.00) + 1.00
+         d(b) = d.getOrElse(b, 0.00) + 1.00
+       }
+       return d 
     }
-    return d
+    
 }
