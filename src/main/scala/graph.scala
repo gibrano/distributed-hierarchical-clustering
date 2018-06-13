@@ -28,6 +28,7 @@ object Graph extends Serializable {
           if(i != j && C(i).deep == C(j).deep){
             C = C.filter(_ != C(j))
           }
+          j = j + 1  
         }
         i = i + 1  
       }
