@@ -26,7 +26,7 @@ object Clusters extends Serializable {
     
     var K = A.size
     var sumall = 2*K
-    var maxdgr =  sc.parallelize(A).flatMap(row => row).map(i =>(i,1)).reduceByKey((x,y)=>x+y).max._2
+    var maxdgr = Graph.degrees(layer).values.max
     var upperbound = maxdgr / K
     var a = upperbound/2.00
     var par = Coef(a)
