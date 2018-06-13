@@ -44,7 +44,7 @@ object Entropy extends Serializable {
       var TraceL2 = 0.00
       var TraceL3 = 0.00
       var sumall = 2*layer.size
-      var dgrees = Graph.degrees(layer).values
+      var degrees = Graph.degrees(layer).values
       for(dgr <- degrees){
         TraceL1 = TraceL1 + dgr
         TraceL2 = TraceL2 + math.pow(dgr,2) + dgr
