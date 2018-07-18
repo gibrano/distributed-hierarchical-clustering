@@ -15,7 +15,7 @@ object Divergence extends Serializable {
     var entropyA = Entropy.VonNewmann2(A,par,n)
     var entropyB = Entropy.VonNewmann2(B,par,n)
     var entropyC = Entropy.VonNewmann2(C,par,n)
-    var r = entropyC-(1/2)*(entropyA+entropyB)
+    var r = math.sqrt(entropyC-(1/2)*(entropyA+entropyB))
     return r
   }  
   
