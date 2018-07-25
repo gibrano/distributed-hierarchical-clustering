@@ -50,11 +50,18 @@ object Clusters extends Serializable {
       println("Layers size", l)
       t2 = System.nanoTime
       var coords = Array[Array[Int]](Array[Int]())
+      var index = range(0 to (l-1))
+      
+      var jsdMatrix = sc.parallelize(index).map(i => Divergence.computeJSD(i,C,par,n)).cache()
+      
       for( i <- 0 to l-2){
         for(j <- i+1 to l-1){
           coords = coords ++ Array(Array(i,j))
         }
       }
+      
+      coords = getPairs()
+      
       coords = coords.filter(_.size > 0)
       duration2 = (System.nanoTime - t2) / 1e9d
       println("Numbers of pairs",coords.size,"Duration time coords:",duration2)
