@@ -14,6 +14,34 @@ object Clusters extends Serializable {
       return Array(D,C,B,A)
   }
   
+  def Combine(x: Array[Int]): Array[Array[Int]] = {
+      var pairs = Array[Array[Int]](Array[Int]())
+      var l = len(x)
+      for( i <- 0 to l-2){
+        for(j <- i+1 to l-1){
+          pairs = pairs ++ Array(Array(i,j))
+        }
+      }
+      pairs = pairs.filter(_.size > 0)
+      return pairs
+  }
+  
+  def getPairs(layers: Array[Array[Array[Double]]], par: Array[Double], n: Int): Array[Array[Int]] = {
+      var pairs = Array[Array[Int]](Array[Int]())
+      for(len){
+        var l = C.size
+        var index = range(1 to (l-1))
+        var jsdMatrix = sc.parallelize(index).map(i => Divergence.computeJSD(Array(0,i),C,par,n)).cache()
+        var x = jsdMatrix.zipWithIndex().reduce((x,y) => Array(x,y).sort).take(10)
+        pairs = pairs ++ Combine(x)
+        for(j <- 0 to 9){
+          C = C.remove(x(j))
+        }  
+      }
+      pairs = pairs.filter(_.size > 0)
+      return pairs
+  }
+  
   def Hierarchical(layers: Array[Array[Array[Double]]], sc: SparkContext, n: Int): Array[Array[Double]] = {
     var C = layers
     var linkages = Array[Array[Double]]()
@@ -48,23 +76,11 @@ object Clusters extends Serializable {
     while(C.size > 1){
       l = C.size
       println("Layers size", l)
-      t2 = System.nanoTime
-      var coords = Array[Array[Int]](Array[Int]())
-      var index = range(0 to (l-1))
-      
-      var jsdMatrix = sc.parallelize(index).map(i => Divergence.computeJSD(i,C,par,n)).cache()
-      
-      for( i <- 0 to l-2){
-        for(j <- i+1 to l-1){
-          coords = coords ++ Array(Array(i,j))
-        }
-      }
-      
-      coords = getPairs()
-      
-      coords = coords.filter(_.size > 0)
+      t2 = System.nanoTime      
+      var coords = getPairs(C,par,n)
       duration2 = (System.nanoTime - t2) / 1e9d
       println("Numbers of pairs",coords.size,"Duration time coords:",duration2)
+      
       t2 = System.nanoTime
       var jsdMatrix = sc.parallelize(coords).map(x => Divergence.computeJSD(x,C,par,n)).cache()
       var minimum = jsdMatrix.zipWithIndex().reduce((x,y) => Array(x,y).min)
