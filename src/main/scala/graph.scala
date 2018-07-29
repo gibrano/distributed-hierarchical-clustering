@@ -18,7 +18,7 @@ object Graph extends Serializable {
        return A
     }
 
-    def aggregate(A: Array[Array[Double]], B: Array[Array[Double]]): Array[Array[Double]] = {
+    def aggregate(A: Array[Array[Double]], B: Array[Array[Double]], v: Double): Array[Array[Double]] = {
       var C = A ++ B
       var n = C.size
       var i = 0  
@@ -27,6 +27,7 @@ object Graph extends Serializable {
         while(j < C.size){
           if(i != j && C(i).deep == C(j).deep){
             C = C.filter(_ != C(j))
+            C(j)(2) = v*2.00
           }
           j = j + 1  
         }
