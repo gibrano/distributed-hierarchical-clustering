@@ -27,7 +27,7 @@ object Graph extends Serializable {
         while(j < C.size){
           if(i != j && C(i).deep == C(j).deep){
             C = C.filter(_ != C(j))
-            C(j)(2) = v*2.00
+            C(i)(2) = v*2.00
           }
           j = j + 1  
         }
