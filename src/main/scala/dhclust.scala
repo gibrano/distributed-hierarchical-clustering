@@ -80,7 +80,7 @@ object Clusters extends Serializable {
       l = C.size
       println("Layers size", l)
       t2 = System.nanoTime      
-      var coords = getPairs(C,par,n)
+      var coords = getPairs(C,par,n, sc)
       duration2 = (System.nanoTime - t2) / 1e9d
       println("Numbers of pairs",coords.size,"Duration time coords:",duration2)
       
