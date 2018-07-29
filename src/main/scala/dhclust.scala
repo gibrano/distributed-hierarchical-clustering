@@ -54,7 +54,7 @@ object Clusters extends Serializable {
     println("Aggregating complete layers ...")
     var A = layers(0)
     for(i <- 1 to (l-1)){
-       A = Graph.aggregate(A,C(i))
+       A = Graph.aggregate(A,C(i), 0.5)
     }
 
     println("Computing taylor coefficients  ...")
@@ -96,7 +96,7 @@ object Clusters extends Serializable {
       println("Merging layers",a,b)
       var Cx = C(a)
       var Cy = C(b)
-      var newlayer = Graph.aggregate(Cx,Cy)
+      var newlayer = Graph.aggregate(Cx,Cy,0.5)
       C = C.filter(_ != Cx)
       C = C.filter(_ != Cy)
       C = C ++ Array(newlayer)
