@@ -38,9 +38,10 @@ object Clusters extends Serializable {
         var index = (1 to (l-1))
         var jsdMatrix = sc.parallelize(index).map(i => Divergence.computeJSD(Array(0,i),C,par,n)).cache()
         var x = jsdMatrix.zipWithIndex().sortByKey(true, 1).take(c)
-        var y = x.map(i => i._2.toInt) ++ Array(0)
+        var y = x.map(i => index(i._2.toInt)) ++ Array(0)
         pairs = pairs ++ Combine(y)
-        C = sc.parallelize(y).map(i => C.apply(i)).collect 
+        var comp = index.toBuffer -- y
+        C = sc.parallelize(comp).map(i => C(i)).collect
       }
       pairs = pairs.filter(_.size > 0)
       return pairs
