@@ -16,10 +16,10 @@ object Clusters extends Serializable {
   
   def Combine(x: Array[Int]): Array[Array[Int]] = {
       var pairs = Array[Array[Int]](Array[Int]())
-      var l = len(x)
+      var l = x.size
       for( i <- 0 to l-2){
         for(j <- i+1 to l-1){
-          pairs = pairs ++ Array(Array(i,j))
+          pairs = pairs ++ Array(Array(x(i),x(j)))
         }
       }
       pairs = pairs.filter(_.size > 0)
@@ -28,19 +28,18 @@ object Clusters extends Serializable {
   
   def getPairs(layers: Array[Array[Array[Double]]], par: Array[Double], n: Int): Array[Array[Int]] = {
       var pairs = Array[Array[Int]](Array[Int]())
-      var n = 10
+      var n = 9
       for(len){
         var l = C.size
         if(l < 20){
           n = l
         }
-        var index = range(1 to (l-1))
+        var index = (1 to (l-1))
         var jsdMatrix = sc.parallelize(index).map(i => Divergence.computeJSD(Array(0,i),C,par,n)).cache()
-        var x = jsdMatrix.zipWithIndex().reduce((x,y) => Array(x,y).sort).take(n)
-        pairs = pairs ++ Combine(x)
-        for(j <- 0 to (n-1)){
-          C = C.remove(x(j))
-        }  
+        var x = jsdMatrix.zipWithIndex().sortByKey(true, 1).take(n)
+        var y = x.map(i => i._2.toInt) ++ Array(0)
+        pairs = pairs ++ Combine(y)
+        C = sc.parallelize(y).map(i => C.apply(i)).collect 
       }
       pairs = pairs.filter(_.size > 0)
       return pairs
