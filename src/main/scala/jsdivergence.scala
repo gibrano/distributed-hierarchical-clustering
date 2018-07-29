@@ -7,11 +7,7 @@ import org.apache.spark.SparkConf
 object Divergence extends Serializable {
   
   def JensenShannon(A: Array[Array[Double]], B: Array[Array[Double]],par: Array[Double], n: Int): Double = {
-    var C = Graph.aggregate(A,B)
-    var n = C.size
-    for(i <- 0 to (n-1)){
-        C(i)(2) = 0.5*C(i)(2)
-    }
+    var C = Graph.aggregate(A,B, 0.5)
     var entropyA = Entropy.VonNewmann2(A,par,n)
     var entropyB = Entropy.VonNewmann2(B,par,n)
     var entropyC = Entropy.VonNewmann2(C,par,n)
