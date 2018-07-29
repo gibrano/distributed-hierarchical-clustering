@@ -28,15 +28,15 @@ object Clusters extends Serializable {
   
   def getPairs(layers: Array[Array[Array[Double]]], par: Array[Double], n: Int): Array[Array[Int]] = {
       var pairs = Array[Array[Int]](Array[Int]())
-      var n = 9
+      var c = 9
       while(layers.size > 0){
         var l = layers.size
         if(l < 20){
-          n = l
+          c = l
         }
         var index = (1 to (l-1))
         var jsdMatrix = sc.parallelize(index).map(i => Divergence.computeJSD(Array(0,i),layers,par,n)).cache()
-        var x = jsdMatrix.zipWithIndex().sortByKey(true, 1).take(n)
+        var x = jsdMatrix.zipWithIndex().sortByKey(true, 1).take(c)
         var y = x.map(i => i._2.toInt) ++ Array(0)
         pairs = pairs ++ Combine(y)
         layers = sc.parallelize(y).map(i => layers.apply(i)).collect 
