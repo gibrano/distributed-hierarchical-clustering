@@ -26,7 +26,7 @@ object Clusters extends Serializable {
       return pairs
   }
   
-  def getPairs(layers: Array[Array[Array[Double]]], par: Array[Double], n: Int): Array[Array[Int]] = {
+  def getPairs(layers: Array[Array[Array[Double]]], par: Array[Double], n: Int, sc: SparkContext): Array[Array[Int]] = {
       var pairs = Array[Array[Int]](Array[Int]())
       var c = 9
       while(layers.size > 0){
