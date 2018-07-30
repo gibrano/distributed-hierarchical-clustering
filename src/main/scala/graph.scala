@@ -20,20 +20,15 @@ object Graph extends Serializable {
 
     def aggregate(A: Array[Array[Double]], B: Array[Array[Double]], v: Double): Array[Array[Double]] = {
       var C = A ++ B
+      var out = Array[Array[Double]]()
+      var encountered = scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Boolean]]()
       var n = C.size
-      var i = 0  
-      while(i < C.size){
-        var j = (i+1)  
-        while(j < C.size){
-          if(i != j && C(i).deep == C(j).deep){
-            C = C.filter(_ != C(j))
-            C(i)(2) = v*2.00
-          }
-          j = j + 1  
-        }
-        i = i + 1  
+      for(i <- 0 to (n-1)){
+        if !encountered(C(i)(0))(C(i)(1)) {
+          out = out ++ C(i)
+        } 
       }
-      return C
+      return out
     }
     
     def degrees(A: Array[Array[Double]]): scala.collection.mutable.Map[Int,Double] = {
