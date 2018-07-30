@@ -29,10 +29,10 @@ object Clusters extends Serializable {
   def getPairs(layers: Array[Array[Array[Double]]], par: Array[Double], n: Int, sc: SparkContext): Array[Array[Int]] = {
       var C = layers
       var pairs = Array[Array[Int]](Array[Int]())
-      var c = 9
+      var c = 99
       while(C.size > 0){
         var l = C.size
-        if(l < 20){
+        if(l < 120){
           c = l
         }
         var index = (1 to (l-1))
@@ -52,9 +52,22 @@ object Clusters extends Serializable {
     var linkages = Array[Array[Double]]()
     var l = C.size
     println("Aggregating complete layers ...")
-    var A = layers(0)
-    for(i <- 1 to (l-1)){
-       A = Graph.aggregate(A,C(i), 0.5)
+    //var A = layers(0)
+    //for(i <- 1 to (l-1)){
+    //   A = Graph.aggregate(A,C(i), 0.5)
+    //}
+    var All = sc.parallelize(C).flatMap(i => i).collect
+    var A = Array[Array[Double]]()
+    var encountered = scala.collection.mutable.Map[Int, scala.collection.mutable.Map[Int,Boolean]]()
+    var m = All.size
+    for(i <- 0 to (m-1)){
+      if( !encountered.contains(All(i)(0).toInt) ){
+        encountered(All(i)(0).toInt) = scala.collection.mutable.Map[Int,Boolean](All(i)(1).toInt -> false)
+      }    
+      if(!encountered(All(i)(0).toInt).getOrElse(All(i)(1).toInt, false)){
+        A = A ++ Array(All(i))
+        encountered(All(i)(0).toInt) = scala.collection.mutable.Map[Int,Boolean](All(i)(1).toInt -> true)
+      } 
     }
 
     println("Computing taylor coefficients  ...")
