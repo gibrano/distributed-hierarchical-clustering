@@ -25,7 +25,7 @@ object Graph extends Serializable {
       var n = C.size
       for(i <- 0 to (n-1)){
         if( !encountered(C(i)(0).toInt)(C(i)(1).toInt) ){
-          out = out ++ C(i)
+          out = out ++ Array(C(i))
           encountered(C(i)(0).toInt)(C(i)(1).toInt) = true
         } 
       }
