@@ -27,9 +27,9 @@ object Graph extends Serializable {
         if( !encountered.contains(C(i)(0).toInt) ){
           encountered(C(i)(0).toInt) = scala.collection.mutable.Map[Int,Boolean](C(i)(1).toInt -> false)
         }    
-        if(!encountered(C(i)(0).toInt)(C(i)(1).toInt)){
+        if(!encountered(C(i)(0).toInt).getOrElse(C(i)(1).toInt, false)){
           out = out ++ Array(C(i))
-          encountered(C(i)(0).toInt)(C(i)(1).toInt) = true
+          encountered(C(i)(0).toInt) = scala.collection.mutable.Map[Int,Boolean](C(i)(1).toInt -> true)
         } 
       }
       return out
