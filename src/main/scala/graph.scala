@@ -25,7 +25,7 @@ object Graph extends Serializable {
       var n = C.size
       for(i <- 0 to (n-1)){
         if( !encountered.contains(C(i)(0).toInt) ){
-          encountered(C(i)(0).toInt) = scala.collection.mutable.Map[Int,Boolean]](C(i)(1).toInt -> false)
+          encountered(C(i)(0).toInt) = scala.collection.mutable.Map[Int,Boolean](C(i)(1).toInt -> false)
         }    
         if(!encountered(C(i)(0).toInt)(C(i)(1).toInt)){
           out = out ++ Array(C(i))
