@@ -29,7 +29,7 @@ object Clusters extends Serializable {
   def getPairs(layers: Array[Array[Array[Double]]], par: Array[Double], n: Int, sc: SparkContext): Array[Array[Int]] = {
       var C = layers
       var pairs = Array[Array[Int]](Array[Int]())
-      var c = 0.1*C.size
+      var c = math.floor(0.1*C.size).toInt
       while(C.size > 0){
         var l = C.size
         if(l < 1.25*c){
