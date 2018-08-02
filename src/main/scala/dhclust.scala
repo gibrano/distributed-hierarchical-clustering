@@ -46,11 +46,11 @@ object Clusters extends Serializable {
         t = System.nanoTime
         var x = jsdWithIndex.sorted.take(c)
         println("getPairs - sort - time:",(System.nanoTime - t) / 1e9d)
-        t2 = System.nanoTime
+        t = System.nanoTime
         var y = x.map(i => index(i._2.toInt)) ++ Array(0)
         pairs = pairs ++ Combine(y)
         println("getPairs - Combine - time:",(System.nanoTime - t) / 1e9d)
-        t2 = System.nanoTime
+        t = System.nanoTime
         var comp = index.toBuffer -- y
         //for(i <- comp){
         //  
