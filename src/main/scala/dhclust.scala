@@ -35,9 +35,12 @@ object Clusters extends Serializable {
         if(l < 120){
           c = l
         }
-        var index = (1 to (l-1))
-        var jsdMatrix = index.map(i => Divergence.computeJSD(Array(0,i),C,par,n)).zipWithIndex
-        var x = jsdMatrix.sorted.take(c)
+        var jsdMatrix = Array[Double]()
+        for(i <- 1 to (l-1)){
+          jsdMatrix = jsdMatrix ++ Array(Divergence.computeJSD(Array(0,i),C,par,n))
+        }
+        var jsdWithIndex = jsdMatrix.zipWithIndex
+        var x = jsdWithIndex.sorted.take(c)
         var y = x.map(i => index(i._2.toInt)) ++ Array(0)
         pairs = pairs ++ Combine(y)
         var comp = index.toBuffer -- y
