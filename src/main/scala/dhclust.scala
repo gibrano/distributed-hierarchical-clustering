@@ -55,7 +55,7 @@ object Clusters extends Serializable {
         //for(i <- comp){
         //  
         //}
-        C = sc.parallelize(comp).map(i => C(i)).collect
+        C = comp.toArray.map(i => C(i))
         println("getPairs - Filter C - time:",(System.nanoTime - t) / 1e9d)
       }
       pairs = pairs.filter(_.size > 0)
