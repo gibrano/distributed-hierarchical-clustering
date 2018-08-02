@@ -35,28 +35,17 @@ object Clusters extends Serializable {
         if(l < 75){
           c = l
         }
-        var t = System.nanoTime
         var jsdMatrix = Array[Double]()
         var index = (1 to (l-1))
         for(i <- index){
           jsdMatrix = jsdMatrix ++ Array(Divergence.computeJSD(Array(0,i),C,par,n))
         }
         var jsdWithIndex = jsdMatrix.zipWithIndex
-        println("getPairs - jsdMatrix - time:",(System.nanoTime - t) / 1e9d)
-        t = System.nanoTime
         var x = jsdWithIndex.sorted.take(c)
-        println("getPairs - sort - time:",(System.nanoTime - t) / 1e9d)
-        t = System.nanoTime
         var y = x.map(i => index(i._2.toInt)) ++ Array(0)
         pairs = pairs ++ Combine(y)
-        println("getPairs - Combine - time:",(System.nanoTime - t) / 1e9d)
-        t = System.nanoTime
         var comp = index.toBuffer -- y
-        //for(i <- comp){
-        //  
-        //}
         C = comp.toArray.map(i => C(i))
-        println("getPairs - Filter C - time:",(System.nanoTime - t) / 1e9d)
       }
       pairs = pairs.filter(_.size > 0)
       return pairs
