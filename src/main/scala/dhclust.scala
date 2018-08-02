@@ -55,6 +55,7 @@ object Clusters extends Serializable {
         //for(i <- comp){
         //  
         //}
+        var index2 = comp.toArray
         C = comp.map(i => C(i))
         println("getPairs - Filter C - time:",(System.nanoTime - t) / 1e9d)
       }
