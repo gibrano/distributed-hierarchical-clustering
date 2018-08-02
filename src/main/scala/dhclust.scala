@@ -36,7 +36,8 @@ object Clusters extends Serializable {
           c = l
         }
         var jsdMatrix = Array[Double]()
-        for(i <- 1 to (l-1)){
+        var index = (1 to (l-1))
+        for(i <- index){
           jsdMatrix = jsdMatrix ++ Array(Divergence.computeJSD(Array(0,i),C,par,n))
         }
         var jsdWithIndex = jsdMatrix.zipWithIndex
