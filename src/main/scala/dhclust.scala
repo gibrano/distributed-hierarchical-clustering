@@ -30,9 +30,9 @@ object Clusters extends Serializable {
       var C = layers
       var pairs = Array[Array[Int]](Array[Int]())
       var c = 100
-      while(C.size > 120){
+      while(C.size > 0){
         var l = C.size
-        if(l < 75){
+        if(l < 120){
           c = l
         }
         var jsdMatrix = Array[Double]()
@@ -120,9 +120,7 @@ object Clusters extends Serializable {
 
       t2 = System.nanoTime
       println("Computing global quality ...")
-      println("Number of Layers" + C.size)
       var H = sc.parallelize(C).map(layer => Entropy.VonNewmann2(layer,par,n)).reduce((x,y) => x + y)
-      println("Sum of Von Newmann entropy H =",H)
       var globalquality = 1.00 - ((H/C.size)/hA)
       duration2 = (System.nanoTime - t2) / 1e9d
       println("Global quality:",globalquality,"Duration time:",duration2)
