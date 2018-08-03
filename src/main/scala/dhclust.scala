@@ -32,6 +32,9 @@ object Clusters extends Serializable {
       var c = math.floor(0.1*C.size).toInt
       while(C.size > 0){
         var l = C.size
+        if(l < 1.25*c ){
+          c = l
+        }
         var jsdMatrix = Array[Double]()
         var index = (1 to (l-1))
         for(i <- index){
