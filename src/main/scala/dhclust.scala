@@ -110,8 +110,8 @@ object Clusters extends Serializable {
       println("minimum:",minimum)
       duration2 = (System.nanoTime - t2) / 1e9d
       println("Duration time div JS:",duration2)
-      var a = coords(minimum._1)(0)
-      var b = coords(minimum._2)(1)
+      var a = minimum._1
+      var b = minimum._2
       println("Merging layers",a,b)
       var Cx = C(a)
       var Cy = C(b)
