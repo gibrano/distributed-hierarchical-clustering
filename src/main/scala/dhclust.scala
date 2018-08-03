@@ -29,12 +29,9 @@ object Clusters extends Serializable {
   def getPairs(layers: Array[Array[Array[Double]]], par: Array[Double], n: Int, sc: SparkContext): Array[Array[Int]] = {
       var C = layers
       var pairs = Array[Array[Int]](Array[Int]())
-      var c = 100
+      var c = math.floor(0.1*C.size).toInt
       while(C.size > 0){
         var l = C.size
-        if(l < 120){
-          c = l
-        }
         var jsdMatrix = Array[Double]()
         var index = (1 to (l-1))
         for(i <- index){
