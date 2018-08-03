@@ -23,6 +23,7 @@ object Divergence extends Serializable {
     for( i <- 0 to l-2){
         for(j <- i+1 to l-1){
           var jsd = JensenShannon(layers(x(i)),layers(x(j)),par,n)
+          println(i,j,jsd)
           if(min > jsd){
             min = jsd
             doc1 = i
