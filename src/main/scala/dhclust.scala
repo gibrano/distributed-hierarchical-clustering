@@ -38,13 +38,12 @@ object Clusters extends Serializable {
         var jsdMatrix = Array[Double]()
         var index = (1 to (l-1))
         for(i <- index){
-          jsdMatrix = jsdMatrix ++ Array(Divergence.JensenShannon(C(0),C(i),par,n))
+          jsdMatrix = jsdMatrix ++ Array(Divergence.computeJSD(Array(0,i),C,par,n))
         }
         var jsdWithIndex = jsdMatrix.zipWithIndex
         var x = jsdWithIndex.sorted.take(c)
         var y = x.map(i => index(i._2.toInt)) ++ Array(0)
-        //pairs = pairs ++ Combine(y)
-        pairs = pairs ++ Array(y)
+        pairs = pairs ++ Combine(y)
         var comp = index.toBuffer -- y
         C = comp.toArray.map(i => C(i))
       }
@@ -106,12 +105,11 @@ object Clusters extends Serializable {
       
       t2 = System.nanoTime
       var jsdMatrix = sc.parallelize(coords).map(x => Divergence.computeJSD(x,C,par,n)).cache()
-      var minimum = jsdMatrix.reduce((x,y) => Array(x,y).min)
-      println("minimum:",minimum)
+      var minimum = jsdMatrix.zipWithIndex().reduce((x,y) => Array(x,y).min)
       duration2 = (System.nanoTime - t2) / 1e9d
       println("Duration time div JS:",duration2)
-      var a = minimum._1
-      var b = minimum._2
+      var a = coords(minimum._2.toInt)(0)
+      var b = coords(minimum._2.toInt)(1)
       println("Merging layers",a,b)
       var Cx = C(a)
       var Cy = C(b)
